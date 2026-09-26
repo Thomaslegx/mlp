@@ -258,6 +258,51 @@
                 </div>
             </div>
 
+            <!-- Team Section -->
+            <div class="landing-fade-in glass-panel-gold rounded-2xl p-6 md:p-8 max-w-4xl w-full mb-10" style="animation-delay: .27s">
+                <h2 class="font-cinzel font-bold text-champagne text-sm uppercase tracking-wider mb-6 flex items-center gap-2 justify-center">
+                    <i class="fa-solid fa-users"></i> L'Équipe du Projet
+                </h2>
+
+                <!-- Chef de Projet - featured card -->
+                <div class="flex justify-center mb-6">
+                    <div class="relative bg-gradient-to-br from-champagne/25 via-champagne-bronze/15 to-champagne/5 border-2 border-champagne rounded-2xl px-10 py-6 text-center shadow-2xl shadow-champagne/30">
+                        <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-champagne to-champagne-bronze text-obsidian text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-lg whitespace-nowrap">
+                            <i class="fa-solid fa-crown"></i> Chef de Projet
+                        </div>
+                        <div class="w-16 h-16 mx-auto rounded-full bg-champagne/20 border-2 border-champagne/60 flex items-center justify-center text-champagne text-2xl mb-3 mt-3 shadow-inner">
+                            <i class="fa-solid fa-drafting-compass"></i>
+                        </div>
+                        <div class="font-cinzel font-black text-xl text-slate-100 tracking-wide">Thomas</div>
+                        <div class="text-xs text-champagne font-mono mt-1.5">Direction de Projet & WebGL</div>
+                    </div>
+                </div>
+
+                <!-- Other team members -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto">
+                    <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-1.5">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center text-xs"><i class="fa-solid fa-satellite-dish"></i></div>
+                        <div class="font-bold text-sm text-slate-100">Jaya</div>
+                        <div class="text-[10px] text-champagne font-mono">Acquisition Scanner</div>
+                    </div>
+                    <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-1.5">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center text-xs"><i class="fa-solid fa-brain"></i></div>
+                        <div class="font-bold text-sm text-slate-100">Romain</div>
+                        <div class="text-[10px] text-champagne font-mono">Algorithmes IA & Toits</div>
+                    </div>
+                    <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-1.5">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center text-xs"><i class="fa-solid fa-cubes"></i></div>
+                        <div class="font-bold text-sm text-slate-100">Ethan</div>
+                        <div class="text-[10px] text-champagne font-mono">Modélisation Matériaux</div>
+                    </div>
+                    <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-1.5">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center text-xs"><i class="fa-solid fa-swatchbook"></i></div>
+                        <div class="font-bold text-sm text-slate-100">Lilian</div>
+                        <div class="text-[10px] text-champagne font-mono">Ergonomie & UX/UI</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Launch button -->
             <button onclick="launchSimulator()" class="landing-fade-in landing-launch-btn group relative px-10 py-4 rounded-2xl bg-gradient-to-r from-champagne to-champagne-bronze text-obsidian font-cinzel font-bold text-base tracking-wide shadow-2xl shadow-champagne/30 flex items-center gap-3 overflow-hidden" style="animation-delay: .3s">
                 <i class="fa-solid fa-cube text-lg"></i>
@@ -985,8 +1030,11 @@
                 </h3>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
-                    <div class="bg-obsidian p-3 rounded-lg border border-obsidian-border text-center">
-                        <div class="font-bold text-xs text-slate-100">Thomas</div>
+                    <div class="relative bg-gradient-to-br from-champagne/20 to-champagne-bronze/10 p-3 rounded-lg border-2 border-champagne text-center shadow-lg shadow-champagne/20">
+                        <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-full bg-champagne text-obsidian text-[8px] font-bold flex items-center gap-0.5 whitespace-nowrap">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div class="font-bold text-xs text-slate-100 mt-1">Thomas</div>
                         <div class="text-[10px] text-champagne font-mono">Chef de Projet & WebGL</div>
                     </div>
                     <div class="bg-obsidian p-3 rounded-lg border border-obsidian-border text-center">
@@ -1527,7 +1575,7 @@
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.15;
+            renderer.toneMappingExposure = 1.3;
             // Correct sRGB display output so every colored texture / material
             // reads with true-to-life contrast instead of a washed-out look —
             // paired with texture.encoding = sRGBEncoding on all color maps below.
@@ -1556,7 +1604,7 @@
             ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
 
-            hemiLight = new THREE.HemisphereLight(0xfff0dd, 0x08090c, 0.6);
+            hemiLight = new THREE.HemisphereLight(0xfff0dd, 0x1c2b12, 0.65);
             scene.add(hemiLight);
 
             dirLight = new THREE.DirectionalLight(0xffeaC2, 2.2);
@@ -1602,8 +1650,9 @@
             const ctx = canvas.getContext('2d');
 
             const base = ctx.createLinearGradient(0, 0, RES, RES);
-            base.addColorStop(0, '#57a83e');
-            base.addColorStop(1, '#3d7d2c');
+            base.addColorStop(0, '#7ED321');
+            base.addColorStop(0.5, '#5BC236');
+            base.addColorStop(1, '#3FA02C');
             ctx.fillStyle = base;
             ctx.fillRect(0, 0, RES, RES);
 
@@ -1611,14 +1660,14 @@
                 const r = Math.random() * 26 + 8;
                 const x = Math.random() * RES, y = Math.random() * RES;
                 ctx.fillStyle = Math.random() > 0.5
-                    ? `rgba(140, 214, 80, ${Math.random() * 0.22})`
-                    : `rgba(28, 66, 18, ${Math.random() * 0.25})`;
+                    ? `rgba(180, 240, 90, ${Math.random() * 0.3})`
+                    : `rgba(20, 90, 20, ${0.2 + Math.random() * 0.22})`;
                 ctx.beginPath();
                 ctx.ellipse(x, y, r, r * 0.6, Math.random() * Math.PI, 0, Math.PI * 2);
                 ctx.fill();
             }
 
-            ctx.strokeStyle = 'rgba(20, 60, 15, 0.14)';
+            ctx.strokeStyle = 'rgba(15, 70, 15, 0.16)';
             ctx.lineWidth = 1;
             for (let i = 0; i < 3200; i++) {
                 const x = Math.random() * RES, y = Math.random() * RES;
@@ -1673,11 +1722,12 @@
         function buildGrassField() {
             const bladeGeo = createGrassBladeGeometry();
             const bladeMat = new THREE.MeshStandardMaterial({
-                color: 0x6fbf3f,
-                roughness: 0.55,
+                color: 0xffffff, // multiplied by per-instance vertex colors below
+                vertexColors: true,
+                roughness: 0.45,
                 metalness: 0.0,
                 side: THREE.DoubleSide,
-                envMapIntensity: 0.15
+                envMapIntensity: 0.25
             });
 
             const AREA = 44;
@@ -1686,7 +1736,19 @@
             grassMesh.name = "grassBlades";
             grassMesh.castShadow = false;
             grassMesh.receiveShadow = false;
+            grassMesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(COUNT * 3), 3);
             grassInstanceData = [];
+
+            // Vibrant palette pool: fresh spring green -> punchy lime -> deep emerald,
+            // randomly mixed per-blade so the lawn reads as lively and varied instead
+            // of a single flat, dull tone.
+            const grassPalette = [
+                new THREE.Color(0x8CE23A), // bright lime
+                new THREE.Color(0x5FD13A), // fresh spring green
+                new THREE.Color(0x3FAE2E), // punchy mid green
+                new THREE.Color(0x2E8F2A)  // deep emerald shadow blades
+            ];
+            const tmpColor = new THREE.Color();
 
             for (let i = 0; i < COUNT; i++) {
                 let x, z, tries = 0;
@@ -1707,10 +1769,23 @@
                 grassDummy.rotation.set(0, rotY, 0);
                 grassDummy.scale.set(scaleXZ, scaleY, scaleXZ);
                 grassDummy.updateMatrix();
-                grassMesh.setMatrixAt(grassInstanceData.length - 1, grassDummy.matrix);
+                const idx = grassInstanceData.length - 1;
+                grassMesh.setMatrixAt(idx, grassDummy.matrix);
+
+                // Blend two random palette entries for extra natural variety, then
+                // brighten slightly at random so a few blades really pop in the light.
+                const cA = grassPalette[Math.floor(Math.random() * grassPalette.length)];
+                const cB = grassPalette[Math.floor(Math.random() * grassPalette.length)];
+                tmpColor.copy(cA).lerp(cB, Math.random());
+                const pop = 1 + Math.random() * 0.25;
+                tmpColor.r = Math.min(1, tmpColor.r * pop);
+                tmpColor.g = Math.min(1, tmpColor.g * pop);
+                tmpColor.b = Math.min(1, tmpColor.b * pop);
+                grassMesh.setColorAt(idx, tmpColor);
             }
             grassMesh.count = grassInstanceData.length;
             grassMesh.instanceMatrix.needsUpdate = true;
+            if (grassMesh.instanceColor) grassMesh.instanceColor.needsUpdate = true;
             landscapeGroup.add(grassMesh);
         }
 
@@ -1785,38 +1860,39 @@
 
             // Sunken basin walls (gives the pool real depth instead of floating flat)
             const basinDepth = 1.1;
-            const basinMat = new THREE.MeshStandardMaterial({ color: 0xE8E4D8, roughness: 0.5 });
+            const basinMat = new THREE.MeshStandardMaterial({ color: 0x1E9BB8, roughness: 0.35 });
             const basin = new THREE.Mesh(new THREE.BoxGeometry(poolW + 0.3, basinDepth, poolD + 0.3), basinMat);
             basin.position.set(poolCX, 0.19 - basinDepth / 2, poolCZ);
             poolGroup.add(basin);
 
             // Tiled travertine coping / edge trim around the waterline
-            const copingMat = materialsMap.travertine || new THREE.MeshStandardMaterial({ color: 0xD8C7A1 });
+            const copingMat = materialsMap.travertine || new THREE.MeshStandardMaterial({ color: 0xE8D9A8 });
             const coping = new THREE.Mesh(new THREE.BoxGeometry(poolW + 0.7, 0.12, poolD + 0.7), copingMat);
             coping.position.set(poolCX, 0.25, poolCZ);
             coping.receiveShadow = true;
             poolGroup.add(coping);
             // Inner rim highlight so the coping doesn't read as a flat slab
             const copingRimGeo = new THREE.RingGeometry(1, 1, 4);
-            const rimBox = new THREE.Mesh(new THREE.BoxGeometry(poolW + 0.05, 0.14, poolD + 0.05), new THREE.MeshStandardMaterial({ color: 0xF3E9D2, roughness: 0.4 }));
+            const rimBox = new THREE.Mesh(new THREE.BoxGeometry(poolW + 0.05, 0.14, poolD + 0.05), new THREE.MeshStandardMaterial({ color: 0xFDF0D5, roughness: 0.35 }));
             rimBox.position.set(poolCX, 0.24, poolCZ);
             poolGroup.add(rimBox);
 
             // Pool Water Surface — subdivided plane so real ripples can be animated
             // on its vertices every frame (see updatePoolWater in animate()), instead
-            // of just a static flat pane with a pulsing opacity.
+            // of just a static flat pane with a pulsing opacity. Vibrant Caribbean-
+            // turquoise instead of the previous dull teal-grey.
             const poolWaterGeo = new THREE.PlaneGeometry(poolW, poolD, 48, 24);
             poolWaterGeo.userData.basePositions = poolWaterGeo.attributes.position.array.slice();
             const poolWaterMat = new THREE.MeshPhysicalMaterial({
-                color: 0x00A896,
+                color: 0x00E5FF,
                 transparent: true,
-                opacity: 0.8,
-                roughness: 0.04,
+                opacity: 0.72,
+                roughness: 0.03,
                 metalness: 0.0,
                 clearcoat: 1.0,
-                clearcoatRoughness: 0.04,
-                transmission: 0.4,
-                envMapIntensity: 1.4
+                clearcoatRoughness: 0.03,
+                transmission: 0.55,
+                envMapIntensity: 1.9
             });
             const water = new THREE.Mesh(poolWaterGeo, poolWaterMat);
             water.rotation.x = -Math.PI / 2;
@@ -1825,14 +1901,14 @@
             poolGroup.add(water);
 
             // Underwater glow lights along the basin's long wall — the classic
-            // "resort pool at dusk" cue
-            const uwGlowMat = new THREE.MeshBasicMaterial({ color: 0x8FFFEA });
+            // "resort pool at dusk" cue, brightened for extra vibrancy
+            const uwGlowMat = new THREE.MeshBasicMaterial({ color: 0x7CFFF2 });
             [-3.5, -1.2, 1.2, 3.5].forEach(dx => {
                 const glow = new THREE.Mesh(new THREE.CircleGeometry(0.18, 16), uwGlowMat);
                 glow.rotation.x = -Math.PI / 2;
                 glow.position.set(poolCX + dx, 0.21, poolCZ - poolD / 2 + 0.1);
                 poolGroup.add(glow);
-                const pl = new THREE.PointLight(0x8FFFEA, 0.6, 3.5, 2);
+                const pl = new THREE.PointLight(0x7CFFF2, 0.9, 4, 2);
                 pl.position.set(poolCX + dx, 0.3, poolCZ - poolD / 2 + 0.1);
                 poolGroup.add(pl);
             });
@@ -3182,7 +3258,7 @@
             }
             pos.needsUpdate = true;
             geo.computeVertexNormals();
-            poolWaterMesh.material.opacity = 0.75 + Math.sin(t * 2.0) * 0.06;
+            poolWaterMesh.material.opacity = 0.72 + Math.sin(t * 2.0) * 0.06;
         }
 
         function animate(time) {
