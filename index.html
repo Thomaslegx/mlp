@@ -1100,6 +1100,7 @@
         let scene, camera, renderer, controls;
         let buildingGroup, landscapeGroup, laserGroup, pointCloudMesh;
         let dirLight, hemiLight, ambientLight, fillLight;
+        let skyDome = null;
         let contactShadowMesh;
         let grassMesh = null;
         let grassInstanceData = [];
@@ -1556,13 +1557,68 @@
             if (canvas) paintSwatchThumbnail(canvas.getContext('2d'), canvas.width, key);
         }
 
+        // Builds a crisp, visible sky-dome (a large inverted sphere painted with a
+        // vertical gradient) that sits behind everything in the scene. Previously
+        // the scene simply used a near-black flat color as background even at
+        // "high noon", which crushed all contrast and made every other color in
+        // the scene (grass, pool, materials) read as dull. A proper gradient sky
+        // per lighting preset is the single biggest lever for overall vibrancy.
+        function createSkyGradientTexture(topColor, midColor, bottomColor) {
+            const w = 2, h = 512;
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, h);
+            grad.addColorStop(0, topColor);
+            grad.addColorStop(0.55, midColor);
+            grad.addColorStop(1, bottomColor);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.ClampToEdgeWrapping;
+            tex.wrapT = THREE.ClampToEdgeWrapping;
+            tex.encoding = THREE.sRGBEncoding;
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function buildSkyDome() {
+            const geo = new THREE.SphereGeometry(400, 32, 20);
+            const mat = new THREE.MeshBasicMaterial({ side: THREE.BackSide, fog: false, depthWrite: false });
+            skyDome = new THREE.Mesh(geo, mat);
+            skyDome.name = "skyDome";
+            skyDome.renderOrder = -1;
+            scene.add(skyDome);
+            updateSkyDome(state.lighting);
+        }
+
+        // Regenerates the sky-dome gradient (and matches the fog color to its
+        // horizon band so distant terrain blends seamlessly instead of fading to
+        // an unrelated flat color) whenever the lighting preset changes.
+        function updateSkyDome(preset) {
+            if (!skyDome) return;
+            let top, mid, bottom, fogColor;
+            if (preset === 'golden') {
+                top = '#1B2A55'; mid = '#F0784A'; bottom = '#FFD9A0'; fogColor = 0xF0A868;
+            } else if (preset === 'noon') {
+                top = '#1478E0'; mid = '#8FCBF5'; bottom = '#EAF7FF'; fogColor = 0xCDE9FB;
+            } else { // night
+                top = '#02040B'; mid = '#050A18'; bottom = '#0C1728'; fogColor = 0x070C18;
+            }
+            const tex = createSkyGradientTexture(top, mid, bottom);
+            if (skyDome.material.map) skyDome.material.map.dispose();
+            skyDome.material.map = tex;
+            skyDome.material.needsUpdate = true;
+            if (scene.fog) scene.fog.color.setHex(fogColor);
+            scene.background = null; // sky-dome shows through instead of a flat color
+        }
+
         function initThreeScene() {
             const container = document.getElementById('canvas-container');
             
             // Scene
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x08090C);
-            scene.fog = new THREE.FogExp2(0x08090C, 0.012);
+            scene.fog = new THREE.FogExp2(0xF0A868, 0.012);
 
             // Camera
             camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -1610,8 +1666,8 @@
             dirLight = new THREE.DirectionalLight(0xffeaC2, 2.2);
             dirLight.position.set(30, 40, 20);
             dirLight.castShadow = true;
-            dirLight.shadow.mapSize.width = 2048;
-            dirLight.shadow.mapSize.height = 2048;
+            dirLight.shadow.mapSize.width = 4096;
+            dirLight.shadow.mapSize.height = 4096;
             dirLight.shadow.camera.near = 0.5;
             dirLight.shadow.camera.far = 150;
             const d = 30;
@@ -1629,6 +1685,7 @@
 
             // Build Materials & Environment
             initMaterials();
+            buildSkyDome();
             buildLandscape();
             buildDriftingClouds();
             initLaserScanner();
@@ -1643,6 +1700,41 @@
         // Vibrant, richly-mottled lawn texture: brighter/more saturated green base,
         // organic clumping patches for depth, plus fine directional grass-stroke
         // detail so the ground reads as alive up close instead of a flat fill.
+        // Light aqua mosaic-tile texture for the pool basin floor/walls — reads as
+        // a real sunlit pool bottom seen through the water instead of a flat box.
+        function createPoolTileTexture() {
+            const RES = 512;
+            const canvas = document.createElement('canvas');
+            canvas.width = RES; canvas.height = RES;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#DFF6FB';
+            ctx.fillRect(0, 0, RES, RES);
+            const tile = 32;
+            for (let y = 0; y < RES; y += tile) {
+                for (let x = 0; x < RES; x += tile) {
+                    const even = (Math.floor(x / tile) + Math.floor(y / tile)) % 2 === 0;
+                    ctx.fillStyle = even ? '#BCEBF5' : '#E7F9FC';
+                    ctx.fillRect(x + 1, y + 1, tile - 2, tile - 2);
+                }
+            }
+            ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+            ctx.lineWidth = 1.5;
+            for (let y = 0; y <= RES; y += tile) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(RES, y); ctx.stroke();
+            }
+            for (let x = 0; x <= RES; x += tile) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, RES); ctx.stroke();
+            }
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            tex.repeat.set(5, 2);
+            if (renderer) tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            tex.encoding = THREE.sRGBEncoding;
+            tex.needsUpdate = true;
+            return tex;
+        }
+
         function createGroundTexture() {
             const RES = 512;
             const canvas = document.createElement('canvas');
@@ -1731,7 +1823,7 @@
             });
 
             const AREA = 44;
-            const COUNT = 4200;
+            const COUNT = 5600;
             grassMesh = new THREE.InstancedMesh(bladeGeo, bladeMat, COUNT);
             grassMesh.name = "grassBlades";
             grassMesh.castShadow = false;
@@ -1859,8 +1951,10 @@
             poolGroup.add(deck);
 
             // Sunken basin walls (gives the pool real depth instead of floating flat)
+            // — tiled with a light mosaic pattern (instead of a flat dark box) so the
+            // pool floor reads as an actual sunlit basin through the water.
             const basinDepth = 1.1;
-            const basinMat = new THREE.MeshStandardMaterial({ color: 0x1E9BB8, roughness: 0.35 });
+            const basinMat = new THREE.MeshStandardMaterial({ map: createPoolTileTexture(), roughness: 0.3, metalness: 0.05 });
             const basin = new THREE.Mesh(new THREE.BoxGeometry(poolW + 0.3, basinDepth, poolD + 0.3), basinMat);
             basin.position.set(poolCX, 0.19 - basinDepth / 2, poolCZ);
             poolGroup.add(basin);
@@ -2166,7 +2260,7 @@
 
                 // Garden Grass Layer
                 const grassGeo = new THREE.BoxGeometry(width - 0.6, 0.1, depth - 0.6);
-                const grassMat = new THREE.MeshStandardMaterial({ color: 0x3B6029, roughness: 0.9 });
+                const grassMat = new THREE.MeshStandardMaterial({ color: 0x5FD13A, roughness: 0.85 });
                 const grassMesh = new THREE.Mesh(grassGeo, grassMat);
                 grassMesh.position.y = 0.36;
                 roofGroup.add(grassMesh);
@@ -2806,30 +2900,25 @@
             playSoundFX('click');
 
             if (preset === 'golden') {
-                scene.background = new THREE.Color(0x181016);
-                scene.fog.color.setHex(0x181016);
                 ambientLight.color.setHex(0xFFD1A4);
                 ambientLight.intensity = 0.8;
                 dirLight.color.setHex(0xFFB066);
                 dirLight.intensity = 2.5;
                 dirLight.position.set(35, 20, 25);
             } else if (preset === 'noon') {
-                scene.background = new THREE.Color(0x0C1424);
-                scene.fog.color.setHex(0x0C1424);
                 ambientLight.color.setHex(0xFFFFFF);
-                ambientLight.intensity = 1.0;
+                ambientLight.intensity = 1.1;
                 dirLight.color.setHex(0xFFFFFF);
-                dirLight.intensity = 2.8;
+                dirLight.intensity = 2.9;
                 dirLight.position.set(10, 50, 10);
             } else if (preset === 'night') {
-                scene.background = new THREE.Color(0x040508);
-                scene.fog.color.setHex(0x040508);
                 ambientLight.color.setHex(0x223355);
                 ambientLight.intensity = 0.3;
                 dirLight.color.setHex(0x6688CC);
                 dirLight.intensity = 0.8;
                 dirLight.position.set(-20, 30, -20);
             }
+            updateSkyDome(preset);
         }
 
         function applyArchitecturalStyle(styleKey) {
