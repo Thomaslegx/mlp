@@ -120,16 +120,160 @@
         .scan-line-anim {
             animation: scanSweep 2.5s infinite ease-in-out;
         }
+
+        /* ---- Landing screen animations ---- */
+        @keyframes landingFadeUp {
+            0% { opacity: 0; transform: translateY(18px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .landing-fade-in {
+            opacity: 0;
+            animation: landingFadeUp 0.8s cubic-bezier(.16,1,.3,1) forwards;
+        }
+        @keyframes orbFloat1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(40px,30px); } }
+        @keyframes orbFloat2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-30px,40px); } }
+        @keyframes orbFloat3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px,-30px); } }
+        .landing-orb-1 { animation: orbFloat1 12s ease-in-out infinite; }
+        .landing-orb-2 { animation: orbFloat2 15s ease-in-out infinite; }
+        .landing-orb-3 { animation: orbFloat3 10s ease-in-out infinite; }
+
+        .landing-card { transition: transform .35s ease, border-color .35s ease; }
+        .landing-card:hover { transform: translateY(-4px); border-color: rgba(212,175,55,0.4); }
+
+        .landing-launch-btn { transition: transform .25s ease, box-shadow .25s ease; }
+        .landing-launch-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 20px 50px -10px rgba(212,175,55,0.5); }
+        .landing-launch-btn::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: translateX(-120%);
+            animation: sheenSweep 3s ease-in-out infinite;
+        }
+        @keyframes sheenSweep { 0% { transform: translateX(-120%); } 60%, 100% { transform: translateX(120%); } }
+
+        .landing-particle {
+            position: absolute;
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: rgba(212,175,55,0.55);
+            animation: particleRise linear infinite;
+        }
+        @keyframes particleRise {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+
+        #landing-screen.landing-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.03);
+        }
+        #landing-screen {
+            transition: opacity .6s ease, transform .6s ease;
+        }
+
+        /* Subtle icon/button liveliness across the app */
+        #audio-toggle-btn.audio-active i { color: #D4AF37; animation: audioPulse 1.4s ease-in-out infinite; }
+        @keyframes audioPulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
 </head>
 <body class="bg-obsidian text-slate-200 font-sans overflow-hidden h-screen w-screen select-none">
+
+    <!-- ================= LANDING / PRESENTATION SCREEN ================= -->
+    <div id="landing-screen" class="fixed inset-0 z-[100] overflow-y-auto bg-obsidian">
+        <!-- Ambient animated background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-champagne/10 blur-[120px] landing-orb-1"></div>
+            <div class="absolute top-1/3 -right-32 w-[420px] h-[420px] rounded-full bg-amber-500/10 blur-[110px] landing-orb-2"></div>
+            <div class="absolute bottom-0 left-1/4 w-[380px] h-[380px] rounded-full bg-champagne-bronze/10 blur-[100px] landing-orb-3"></div>
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(212,175,55,0.07) 1px, transparent 1px); background-size: 28px 28px;"></div>
+            <div id="landing-particles" class="absolute inset-0"></div>
+        </div>
+
+        <div class="relative z-10 min-h-full flex flex-col items-center justify-center px-6 py-16">
+
+            <!-- Badge -->
+            <div class="landing-fade-in flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-champagne/30 bg-champagne/5 text-[11px] font-mono text-champagne tracking-wide">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>PROJET TERMINALE SI · 2026-2027</span>
+            </div>
+
+            <!-- Logo -->
+            <div class="landing-fade-in w-20 h-20 rounded-2xl bg-gradient-to-br from-champagne via-champagne-bronze to-obsidian border border-champagne/40 flex items-center justify-center shadow-2xl shadow-champagne/20 mb-6" style="animation-delay: .05s">
+                <i class="fa-solid fa-drafting-compass text-obsidian text-3xl"></i>
+            </div>
+
+            <h1 class="landing-fade-in font-cinzel font-black text-4xl md:text-6xl gold-gradient-text tracking-wide text-center mb-3" style="animation-delay: .1s">ARTCHITECH</h1>
+            <p class="landing-fade-in font-playfair italic text-lg md:text-xl text-slate-300 text-center max-w-2xl mb-10" style="animation-delay: .15s">
+                Modelage Physico-Numérique & Reconstruction Architecturale par IA Générative
+            </p>
+
+            <!-- Feature Cards: the 5-step chain -->
+            <div class="landing-fade-in grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl w-full mb-12" style="animation-delay: .2s">
+                <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-2">
+                    <div class="w-9 h-9 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center"><i class="fa-solid fa-cubes"></i></div>
+                    <p class="text-[11px] font-semibold text-slate-200">Maquette Tactile</p>
+                </div>
+                <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-2">
+                    <div class="w-9 h-9 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center"><i class="fa-solid fa-satellite-dish"></i></div>
+                    <p class="text-[11px] font-semibold text-slate-200">Scan Laser 3D</p>
+                </div>
+                <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-2">
+                    <div class="w-9 h-9 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <p class="text-[11px] font-semibold text-slate-200">Rendu IA Photo</p>
+                </div>
+                <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-2">
+                    <div class="w-9 h-9 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center"><i class="fa-solid fa-house-chimney-window"></i></div>
+                    <p class="text-[11px] font-semibold text-slate-200">Toiture Adaptative</p>
+                </div>
+                <div class="landing-card glass-panel rounded-xl p-4 text-center space-y-2">
+                    <div class="w-9 h-9 mx-auto rounded-full bg-champagne/10 border border-champagne/30 text-champagne flex items-center justify-center"><i class="fa-solid fa-chart-pie"></i></div>
+                    <p class="text-[11px] font-semibold text-slate-200">Métrologie Live</p>
+                </div>
+            </div>
+
+            <!-- Description panel -->
+            <div class="landing-fade-in glass-panel-gold rounded-2xl p-6 md:p-8 max-w-3xl w-full mb-10" style="animation-delay: .25s">
+                <h2 class="font-cinzel font-bold text-champagne text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-diagram-project"></i> Le Projet
+                </h2>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    ARTCHITECH relie une maquette physique modulaire à un pipeline numérique complet : acquisition par scan laser 3D, reconstruction volumétrique et rendu architectural photoréaliste assisté par IA. Le simulateur ci-après permet de composer un bâtiment bloc par bloc, d'ajuster matériaux, fenêtres, portes et toitures, puis de le visualiser en temps réel dans une scène 3D vivante.
+                </p>
+                <div class="grid grid-cols-3 gap-3 mt-6">
+                    <div class="text-center">
+                        <div class="text-2xl font-cinzel font-bold text-champagne">6</div>
+                        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Formes de blocs</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-cinzel font-bold text-champagne">9</div>
+                        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Matériaux PBR</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-cinzel font-bold text-champagne">7</div>
+                        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Styles IA</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Launch button -->
+            <button onclick="launchSimulator()" class="landing-fade-in landing-launch-btn group relative px-10 py-4 rounded-2xl bg-gradient-to-r from-champagne to-champagne-bronze text-obsidian font-cinzel font-bold text-base tracking-wide shadow-2xl shadow-champagne/30 flex items-center gap-3 overflow-hidden" style="animation-delay: .3s">
+                <i class="fa-solid fa-cube text-lg"></i>
+                <span>Lancer le Simulateur</span>
+                <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+            </button>
+            <p class="landing-fade-in text-[11px] text-slate-500 font-mono mt-4" style="animation-delay: .35s">WebGL · Three.js · Rendu PBR Temps Réel</p>
+        </div>
+    </div>
 
     <!-- MAIN NAVIGATION HEADER -->
     <header class="absolute top-0 left-0 right-0 z-30 h-16 px-6 flex items-center justify-between glass-panel border-b border-obsidian-border">
         <!-- Logo & Title -->
         <div class="flex items-center space-x-4">
             <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-champagne via-champagne-bronze to-obsidian border border-champagne/40 flex items-center justify-center shadow-lg shadow-champagne/10">
-                <i class="fa-solid font-cinzel font-bold text-obsidian text-xl">A</i>
+                <i class="fa-solid fa-drafting-compass text-obsidian text-lg"></i>
             </div>
             <div>
                 <div class="flex items-center space-x-2">
@@ -138,16 +282,19 @@
                 </div>
                 <p class="text-[11px] text-slate-400 font-mono tracking-tight">Modelage Physico-Numérique & IA Générative</p>
             </div>
+            <button onclick="showLandingScreen()" title="Retour à la présentation" class="ml-2 w-8 h-8 rounded-lg bg-obsidian-card border border-obsidian-border hover:border-champagne/40 text-slate-400 hover:text-champagne flex items-center justify-center transition">
+                <i class="fa-solid fa-house-chimney text-xs"></i>
+            </button>
         </div>
 
         <!-- Mode Switcher Tabs -->
         <div class="hidden md:flex items-center bg-obsidian-card p-1 rounded-xl border border-obsidian-border shadow-inner">
             <button id="mode-1-btn" onclick="setOperationalMode(1)" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 flex items-center space-x-2 bg-champagne text-obsidian shadow-md">
-                <i class="fa-solid fa-cubes text-xs"></i>
+                <i class="fa-solid fa-cube text-xs"></i>
                 <span>Mode 1: Maquette Tactile</span>
             </button>
             <button id="mode-2-btn" onclick="setOperationalMode(2)" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all duration-300 flex items-center space-x-2">
-                <i class="fa-solid fa-line-scan text-xs"></i>
+                <i class="fa-solid fa-satellite-dish text-xs"></i>
                 <span>Mode 2: Scan Laser 3D</span>
             </button>
             <button id="mode-3-btn" onclick="setOperationalMode(3)" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all duration-300 flex items-center space-x-2">
@@ -584,21 +731,25 @@
                 </h3>
 
                 <div class="space-y-2 text-xs">
-                    <label class="flex items-center justify-between cursor-pointer">
-                        <span class="text-slate-300">Piscine à Débordement</span>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-slate-300 flex items-center gap-2"><i class="fa-solid fa-water text-sky-400/80 w-4 text-center"></i>Piscine à Débordement</span>
                         <input type="checkbox" id="toggle-pool" checked onchange="toggleLandscapeElement('pool')" class="accent-champagne rounded">
                     </label>
-                    <label class="flex items-center justify-between cursor-pointer">
-                        <span class="text-slate-300">Arbres (Cypres, Érables, Bouleaux)</span>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-slate-300 flex items-center gap-2"><i class="fa-solid fa-tree text-emerald-400/80 w-4 text-center"></i>Arbres (Cypres, Érables, Bouleaux)</span>
                         <input type="checkbox" id="toggle-trees" checked onchange="toggleLandscapeElement('trees')" class="accent-champagne rounded">
                     </label>
-                    <label class="flex items-center justify-between cursor-pointer">
-                        <span class="text-slate-300">Allées en Pierre & Gazon Procedural</span>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-slate-300 flex items-center gap-2"><i class="fa-solid fa-seedling text-lime-400/80 w-4 text-center"></i>Allées en Pierre & Gazon Procedural</span>
                         <input type="checkbox" id="toggle-lawn" checked onchange="toggleLandscapeElement('lawn')" class="accent-champagne rounded">
                     </label>
-                    <label class="flex items-center justify-between cursor-pointer">
-                        <span class="text-slate-300">Éclairage Extérieur Spotlights</span>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-slate-300 flex items-center gap-2"><i class="fa-solid fa-lightbulb text-amber-300/80 w-4 text-center"></i>Éclairage Extérieur Spotlights</span>
                         <input type="checkbox" id="toggle-spotlights" checked onchange="toggleLandscapeElement('lights')" class="accent-champagne rounded">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-slate-300 flex items-center gap-2"><i class="fa-solid fa-door-closed text-champagne-bronze w-4 text-center"></i>Porte d'Entrée & Porche</span>
+                        <input type="checkbox" id="toggle-door" checked onchange="rebuildBuildingScene()" class="accent-champagne rounded">
                     </label>
                 </div>
             </div>
@@ -1713,6 +1864,32 @@
 
         
         // AUTOMATIC ADAPTIVE ROOF GENERATOR
+        // Adds a small brick chimney with a soft, gently-drifting smoke wisp —
+        // a tiny detail that makes a roof read as an inhabited, living building.
+        function addChimney(roofGroup, x, baseY, z) {
+            const chimneyMat = new THREE.MeshStandardMaterial({ color: 0x8B4213, roughness: 0.85 });
+            const stack = new THREE.Mesh(new THREE.BoxGeometry(0.45, 1.1, 0.45), chimneyMat);
+            stack.position.set(x, baseY + 0.55, z);
+            stack.castShadow = true;
+            roofGroup.add(stack);
+
+            const cap = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.1, 0.6), materialsMap.basalt);
+            cap.position.set(x, baseY + 1.15, z);
+            roofGroup.add(cap);
+
+            // Layered translucent smoke puffs, each animated later via userData
+            const smokeMat = new THREE.MeshBasicMaterial({ color: 0xCCCCCC, transparent: true, opacity: 0.25 });
+            const smokeGroup = new THREE.Group();
+            smokeGroup.name = "chimneySmoke";
+            for (let i = 0; i < 4; i++) {
+                const puff = new THREE.Mesh(new THREE.SphereGeometry(0.12 + i * 0.05, 8, 8), smokeMat.clone());
+                puff.position.set(x, baseY + 1.3 + i * 0.32, z);
+                puff.userData = { phase: i * 1.3, baseY: puff.position.y };
+                smokeGroup.add(puff);
+            }
+            roofGroup.add(smokeGroup);
+        }
+
         function generateRoofForBuilding() {
             // Find existing roof mesh if any & remove
             const existingRoof = buildingGroup.getObjectByName("proceduralRoof");
@@ -1797,6 +1974,14 @@
                 roofMesh.castShadow = true;
                 roofGroup.add(roofMesh);
 
+                // Gold ridge cap along the peak for a crafted, finished silhouette
+                const ridgeCap = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, depth * 0.6), materialsMap.gold_trim);
+                ridgeCap.position.y = roofHeight * 0.98;
+                roofGroup.add(ridgeCap);
+
+                // Brick chimney with a soft smoke wisp for a lived-in feel
+                addChimney(roofGroup, width * 0.28, roofHeight * 0.6, depth * -0.15);
+
             } else if (state.roofStyle === 'hip') {
                 // 3. Toit à 4 Pentes / Pavillon
                 const roofHeight = 2.2;
@@ -1811,6 +1996,8 @@
                 const cap = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), materialsMap.gold_trim);
                 cap.position.y = roofHeight;
                 roofGroup.add(cap);
+
+                addChimney(roofGroup, width * 0.22, roofHeight * 0.55, depth * 0.18);
 
             } else if (state.roofStyle === 'mansard') {
                 // 4. Toit Mansardé Parisien
@@ -1931,16 +2118,40 @@
                             group.rotation.y = face.dir > 0 ? Math.PI / 2 : -Math.PI / 2;
                         }
 
-                        const frame = new THREE.Mesh(new THREE.BoxGeometry(1.1, Math.min(1.7, storyHeight * 0.65), 0.08), matFrame);
+                        const winH = Math.min(1.7, storyHeight * 0.65);
+                        const glassH = Math.min(1.5, storyHeight * 0.55);
+                        const glassW = 0.92;
+
+                        // Outer frame surround
+                        const frame = new THREE.Mesh(new THREE.BoxGeometry(1.1, winH, 0.1), matFrame);
                         group.add(frame);
 
-                        const glass = new THREE.Mesh(new THREE.PlaneGeometry(0.92, Math.min(1.5, storyHeight * 0.55)), matGlass);
-                        glass.position.z = 0.05;
+                        // Recessed reveal so the glass sits believably inside the frame
+                        const reveal = new THREE.Mesh(new THREE.BoxGeometry(1.0, winH - 0.08, 0.06), materialsMap.basalt);
+                        reveal.position.z = -0.01;
+                        group.add(reveal);
+
+                        const glass = new THREE.Mesh(new THREE.PlaneGeometry(glassW, glassH), matGlass);
+                        glass.position.z = 0.055;
                         group.add(glass);
 
-                        const glow = new THREE.Mesh(new THREE.PlaneGeometry(0.8, Math.min(1.3, storyHeight * 0.45)), matGlow);
+                        const glow = new THREE.Mesh(new THREE.PlaneGeometry(glassW * 0.85, glassH * 0.85), matGlow);
                         glow.position.z = 0.02;
                         group.add(glow);
+
+                        // Slim mullions (cross-bar muntins) reading as true divided-light glazing
+                        const mullionV = new THREE.Mesh(new THREE.BoxGeometry(0.035, glassH, 0.05), matFrame);
+                        mullionV.position.z = 0.06;
+                        group.add(mullionV);
+                        const mullionH = new THREE.Mesh(new THREE.BoxGeometry(glassW, 0.035, 0.05), matFrame);
+                        mullionH.position.z = 0.06;
+                        group.add(mullionH);
+
+                        // Projecting sill (ledge) beneath the window for depth & realism
+                        const sill = new THREE.Mesh(new THREE.BoxGeometry(1.22, 0.06, 0.22), materialsMap.carrara);
+                        sill.position.y = -winH / 2 - 0.05;
+                        sill.position.z = 0.08;
+                        group.add(sill);
 
                         windowGroup.add(group);
                     }
@@ -1948,6 +2159,102 @@
             });
 
             mesh.add(windowGroup);
+        }
+
+        // ENTRANCE DOOR + PORCH GENERATOR
+        // Adds a realistic front door (with frame, glazed transom, handle, canopy
+        // and a couple of stone steps) to the ground floor of the primary block,
+        // on whichever exterior face isn't blocked by a neighbouring block.
+        function attachEntranceDoor(mesh, block, allBlocks) {
+            if (state.mode !== 3) return;
+            if (!document.getElementById('toggle-door') || !document.getElementById('toggle-door').checked) return;
+            if (block.shape === 'tower' || block.shape === 'wedge' || block.shape === 'arc') return;
+
+            // Prefer the +Z (front-facing) face; fall back to any open face
+            const candidates = [
+                { axis: 'z', dir: 1 }, { axis: 'x', dir: 1 },
+                { axis: 'z', dir: -1 }, { axis: 'x', dir: -1 }
+            ];
+            const face = candidates.find(f => !isFaceBlockedByNeighbour(block, allBlocks, f.axis, f.dir));
+            if (!face) return;
+
+            const doorGroup = new THREE.Group();
+            doorGroup.name = "entranceDoor";
+
+            const doorW = 1.0, doorH = 2.15;
+            const offset = (face.axis === 'z' ? block.dimZ / 2 : block.dimX / 2) + 0.03;
+            const groundY = -block.dimY / 2 + doorH / 2 + 0.02;
+
+            if (face.axis === 'z') {
+                doorGroup.position.set(0, groundY, face.dir * offset);
+                if (face.dir < 0) doorGroup.rotation.y = Math.PI;
+            } else {
+                doorGroup.position.set(face.dir * offset, groundY, 0);
+                doorGroup.rotation.y = face.dir > 0 ? Math.PI / 2 : -Math.PI / 2;
+            }
+
+            // Stone door surround / architrave
+            const surround = new THREE.Mesh(new THREE.BoxGeometry(doorW + 0.3, doorH + 0.3, 0.12), materialsMap.carrara);
+            doorGroup.add(surround);
+
+            // Solid door leaf (rich wood tone, distinct from the wall material)
+            const doorMat = new THREE.MeshStandardMaterial({ color: 0x5C3A21, roughness: 0.55, metalness: 0.1 });
+            const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(doorW - 0.06, doorH - 0.06, 0.08), doorMat);
+            doorLeaf.position.z = 0.04;
+            doorGroup.add(doorLeaf);
+
+            // Vertical panel grooves on the door for detail
+            for (const px of [-0.22, 0.22]) {
+                const panel = new THREE.Mesh(new THREE.BoxGeometry(0.32, doorH - 0.5, 0.02), new THREE.MeshStandardMaterial({ color: 0x4A2E19, roughness: 0.6 }));
+                panel.position.set(px, 0, 0.085);
+                doorGroup.add(panel);
+            }
+
+            // Glazed transom above the door, matching the architectural glass
+            const transom = new THREE.Mesh(new THREE.PlaneGeometry(doorW - 0.1, 0.28), materialsMap.glass);
+            transom.position.set(0, doorH / 2 - 0.05, 0.09);
+            doorGroup.add(transom);
+
+            // Gold door handle
+            const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.22, 8), materialsMap.gold_trim);
+            handle.rotation.z = Math.PI / 2;
+            handle.position.set(doorW / 2 - 0.22, -0.05, 0.1);
+            doorGroup.add(handle);
+
+            // Canopy / porch awning over the entrance
+            const canopy = new THREE.Mesh(new THREE.BoxGeometry(doorW + 0.7, 0.08, 0.55), materialsMap.aluminum);
+            canopy.position.set(0, doorH / 2 + 0.28, 0.28);
+            canopy.castShadow = true;
+            doorGroup.add(canopy);
+            for (const px of [-doorW / 2 - 0.1, doorW / 2 + 0.1]) {
+                const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.3, 6), materialsMap.gold_trim);
+                rod.rotation.x = 0.3;
+                rod.position.set(px, doorH / 2 + 0.24, 0.15);
+                doorGroup.add(rod);
+            }
+
+            // Warm porch light beside the door
+            const lampGlow = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), matWindowGlowSafe());
+            lampGlow.position.set(doorW / 2 + 0.18, 0.35, 0.05);
+            doorGroup.add(lampGlow);
+            const porchLight = new THREE.PointLight(0xFFD9A0, 0.7, 4, 2);
+            porchLight.position.copy(lampGlow.position);
+            doorGroup.add(porchLight);
+
+            // Two stone entry steps leading up to the door
+            for (let i = 0; i < 2; i++) {
+                const step = new THREE.Mesh(new THREE.BoxGeometry(doorW + 1.0 - i * 0.3, 0.12, 0.32), materialsMap.travertine);
+                step.position.set(0, -doorH / 2 - 0.06 - i * 0.12, 0.28 + i * 0.28);
+                step.receiveShadow = true;
+                doorGroup.add(step);
+            }
+
+            mesh.add(doorGroup);
+        }
+
+        // Small helper so the door lamp glow works even before materialsMap.window_glow exists
+        function matWindowGlowSafe() {
+            return materialsMap.window_glow || new THREE.MeshBasicMaterial({ color: 0xFFE0B2 });
         }
 
         // Syncs the dimension/rotation sliders to whichever block is currently selected
@@ -2089,6 +2396,7 @@
                 // Attach procedural windows in Mode 3
                 if (state.mode === 3) {
                     attachProceduralWindowsToMesh(mesh, b, state.blocks);
+                    if (idx === 0) attachEntranceDoor(mesh, b, state.blocks);
                 }
 
                 buildingGroup.add(mesh);
@@ -2194,10 +2502,10 @@
             state.audioEnabled = !state.audioEnabled;
             const btn = document.getElementById('audio-toggle-btn');
             if (state.audioEnabled) {
-                btn.classList.add('text-champagne');
+                btn.classList.add('text-champagne', 'audio-active');
                 btn.classList.remove('text-slate-500');
             } else {
-                btn.classList.remove('text-champagne');
+                btn.classList.remove('text-champagne', 'audio-active');
                 btn.classList.add('text-slate-500');
             }
         }
@@ -2589,10 +2897,54 @@
             // Pool Water Ripple Animation
             updatePoolWater(time);
 
+            // Chimney Smoke Drift Animation
+            const smokeGroup = buildingGroup.getObjectByName("chimneySmoke");
+            if (smokeGroup) {
+                const t = time * 0.001;
+                smokeGroup.children.forEach(puff => {
+                    const cycle = ((t * 0.35 + puff.userData.phase) % 3) / 3; // 0..1 loop
+                    puff.position.y = puff.userData.baseY + cycle * 1.4;
+                    puff.scale.setScalar(0.8 + cycle * 1.6);
+                    puff.material.opacity = 0.28 * (1 - cycle);
+                });
+            }
+
             // Grass Blade Wind Sway Animation
             updateGrassWind(time);
 
             renderer.render(scene, camera);
+        }
+
+        // Spawns a handful of slow-rising gold embers behind the landing screen content
+        function spawnLandingParticles() {
+            const host = document.getElementById('landing-particles');
+            if (!host) return;
+            const COUNT = 26;
+            for (let i = 0; i < COUNT; i++) {
+                const p = document.createElement('div');
+                p.className = 'landing-particle';
+                p.style.left = `${Math.random() * 100}%`;
+                p.style.bottom = `-10px`;
+                p.style.animationDuration = `${9 + Math.random() * 10}s`;
+                p.style.animationDelay = `${Math.random() * 10}s`;
+                p.style.opacity = (0.3 + Math.random() * 0.5).toFixed(2);
+                host.appendChild(p);
+            }
+        }
+
+        // Fades out the landing/presentation screen to reveal the simulator workspace
+        function launchSimulator() {
+            playSoundFX('click');
+            const landing = document.getElementById('landing-screen');
+            landing.classList.add('landing-hidden');
+            setTimeout(() => { landing.style.display = 'none'; }, 650);
+        }
+
+        // Brings the presentation screen back (accessible via the header home icon)
+        function showLandingScreen() {
+            const landing = document.getElementById('landing-screen');
+            landing.style.display = 'block';
+            requestAnimationFrame(() => landing.classList.remove('landing-hidden'));
         }
 
         // WINDOW ONLOAD INITIALIZATION
@@ -2601,6 +2953,7 @@
             paintAllSwatchThumbnails();
             updateBlockMaterialPreview();
             animate(0);
+            spawnLandingParticles();
         };
     </script>
 </body>
