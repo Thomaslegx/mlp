@@ -43,8 +43,23 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: white; }
-        .logo span { color: var(--accent); }
+        /* Styles du logo mis à jour */
+        .logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            letter-spacing: 1px; 
+            color: white; 
+        }
+        .logo img {
+            height: 40px; /* Ajustez cette valeur pour modifier la taille du logo */
+            width: auto;
+            object-fit: contain;
+        }
+        .logo-text span { color: var(--accent); }
+        
         .badge { border: 1px solid var(--accent); color: var(--accent); padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
 
         /* HERO */
@@ -81,7 +96,7 @@
         }
 
         .step-section {
-            height: 100vh; /* Chaque section prend la hauteur de l'écran */
+            height: 100vh; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -192,13 +207,19 @@
             .text-column { width: 100%; padding: 0 20px; }
             .visual-column { width: 100%; position: fixed; bottom: 0; top: auto; height: 50vh; z-index: -1; padding: 10px; opacity: 0.3; }
             .step-section { height: 70vh; justify-content: flex-start; padding-top: 100px; }
+            header { padding: 15px 20px; }
+            .logo img { height: 30px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">ART<span>CHITECH</span></div>
+        <div class="logo">
+            <!-- Intégration du logo image -->
+            <img src="logo_artchitech.png" alt="Logo ArtChitech">
+            <div class="logo-text">ART<span>CHITECH</span></div>
+        </div>
         <div class="badge">Projet SI</div>
     </header>
 
@@ -381,25 +402,20 @@
             const steps = document.querySelectorAll('.step-section');
             const visuals = document.querySelectorAll('.svg-scene');
 
-            // L'IntersectionObserver est la méthode moderne sans bug pour détecter 
-            // quel élément est visible à l'écran.
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.5 // Se déclenche quand 50% du texte est visible
+                threshold: 0.5 
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Récupérer l'ID de l'étape en cours (ex: "step1")
                         const currentId = entry.target.id;
-                        const stepNumber = currentId.replace('step', ''); // Récupère "1", "2", etc.
+                        const stepNumber = currentId.replace('step', ''); 
                         
-                        // Cacher tous les visuels
                         visuals.forEach(vis => vis.classList.remove('active'));
                         
-                        // Afficher le bon visuel (ex: "vis1")
                         const activeVisual = document.getElementById('vis' + stepNumber);
                         if (activeVisual) {
                             activeVisual.classList.add('active');
@@ -408,7 +424,6 @@
                 });
             }, observerOptions);
 
-            // Observer tous les textes
             steps.forEach(step => {
                 observer.observe(step);
             });
