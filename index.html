@@ -3,23 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArtChitech | IA & Modelage Architectural</title>
-    
-    <!-- Importation de la police Google (Inter) pour un look moderne -->
+    <title>ArtChitech | Le futur de l'architecture</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
-
     <style>
-        /* ==========================================================================
-           1. RESET & VARIABLES GLOBALES
-           ========================================================================== */
         :root {
-            --bg-main: #050505;
-            --bg-secondary: #0a0a0a;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --accent-blue: #2563eb;
-            --accent-glow: rgba(37, 99, 235, 0.5);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-dark: #09090b;
+            --bg-card: #18181b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-pool: #06b6d4;
         }
 
         * {
@@ -30,15 +23,12 @@
         }
 
         body {
-            background-color: var(--bg-main);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
-        /* ==========================================================================
-           2. EN-TÊTE (HEADER)
-           ========================================================================== */
+        /* HEADER */
         header {
             position: fixed;
             top: 0;
@@ -47,45 +37,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            background: rgba(5, 5, 5, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: white; }
+        .logo span { color: var(--accent); }
+        .badge { border: 1px solid var(--accent); color: var(--accent); padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
 
-        /* Logo animé en CSS */
-        .logo-icon {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #2563eb, #60a5fa);
-            border-radius: 4px;
-            transform: rotate(45deg);
-            animation: pulseLogo 3s infinite alternate;
-        }
-
-        .team-badge {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            padding: 6px 16px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        /* ==========================================================================
-           3. SECTION HÉRO (ACCUEIL)
-           ========================================================================== */
+        /* HERO */
         .hero {
             height: 100vh;
             display: flex;
@@ -94,371 +56,361 @@
             align-items: center;
             text-align: center;
             padding: 0 20px;
-            background: radial-gradient(circle at center, #151515 0%, var(--bg-main) 100%);
+            background: radial-gradient(circle at top, #1e1e24 0%, var(--bg-dark) 100%);
         }
 
-        .hero h1 {
-            font-size: clamp(3rem, 5vw, 6rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            background: linear-gradient(to right, #ffffff, #71717a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            max-width: 900px;
+        .hero h1 { font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 900; margin-bottom: 20px; }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; margin-bottom: 40px; }
+
+        .scroll-down {
+            animation: bounce 2s infinite;
+            opacity: 0.7;
         }
 
-        .hero p {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
-            color: var(--text-muted);
-            max-width: 600px;
-            line-height: 1.6;
-            margin-bottom: 50px;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            animation: bounce 2s infinite ease-in-out;
-            color: var(--text-muted);
-        }
-
-        /* ==========================================================================
-           4. SECTION SCROLL ANIMÉ (LE CŒUR DU SITE)
-           ========================================================================== */
-        #scroll-section {
-            height: 400vh; /* Permet de scroller longuement pour voir les 4 étapes */
+        /* SECTION STICKY ROBUSTE */
+        .story-container {
+            display: flex;
             position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .sticky-container {
+        .text-column {
+            width: 40%;
+            padding: 0 5%;
+        }
+
+        .step-section {
+            height: 100vh; /* Chaque section prend la hauteur de l'écran */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .step-section h2 { font-size: 3rem; margin-bottom: 20px; color: var(--accent); }
+        .step-section p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.8; }
+
+        .visual-column {
+            width: 60%;
+            height: 100vh;
             position: sticky;
             top: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* --- Textes de gauche --- */
-        .steps-text {
-            flex: 1;
-            padding-left: 10%;
-            position: relative;
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
-
-        .step-text {
-            position: absolute;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 450px;
-            pointer-events: none;
-        }
-
-        .step-text.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .step-text h2 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--text-main);
-        }
-
-        .step-text span.step-number {
-            display: block;
-            font-size: 1.2rem;
-            color: var(--accent-blue);
-            font-weight: 900;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-
-        .step-text p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
-        /* --- Visuels de droite --- */
-        .steps-visuals {
-            flex: 1.2;
-            height: 100%;
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px;
         }
 
-        .step-visual {
-            position: absolute;
-            width: 70%;
-            height: 60%;
-            border-radius: 24px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            opacity: 0;
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-        }
-
-        .step-visual.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        /* ==========================================================================
-           5. ANIMATIONS CSS DES VISUELS (SANS IMAGES)
-           ========================================================================== */
-
-        /* Étape 1 : Le cube 3D (Assemblage) */
-        .cube-scene {
-            width: 150px; height: 150px;
-            perspective: 1000px;
-        }
-        .cube-wrapper {
-            width: 100%; height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: spinCube 12s infinite linear;
-        }
-        .cube-face {
-            position: absolute;
-            width: 150px; height: 150px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .cube-face::after {
-            content: ''; width: 50%; height: 50%;
-            background: var(--accent-blue); opacity: 0.5; border-radius: 4px;
-        }
-        .front  { transform: rotateY(  0deg) translateZ(75px); }
-        .back   { transform: rotateY(180deg) translateZ(75px); }
-        .right  { transform: rotateY( 90deg) translateZ(75px); }
-        .left   { transform: rotateY(-90deg) translateZ(75px); }
-        .top    { transform: rotateX( 90deg) translateZ(75px); }
-        .bottom { transform: rotateX(-90deg) translateZ(75px); }
-
-        /* Étape 2 : Le Scanner Laser */
-        .scanner-scene {
-            width: 200px; height: 200px;
-            position: relative;
+        .visual-frame {
+            width: 100%;
+            height: 80%;
+            background: var(--bg-card);
+            border-radius: 20px;
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-            transform: perspective(500px) rotateX(45deg) rotateZ(45deg);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
-        .laser-beam {
+
+        .svg-scene {
             position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: #10b981;
-            box-shadow: 0 0 20px #10b981, 0 0 40px #10b981;
-            animation: scanVertical 2s infinite ease-in-out alternate;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Étape 3 : Interface Paramétrage */
-        .ui-scene {
-            width: 260px;
-            background: #111;
-            border-radius: 16px;
-            padding: 30px 20px;
-            border: 1px solid #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .ui-row {
-            height: 8px; background: #222; border-radius: 4px; margin-bottom: 30px; position: relative;
-        }
-        .ui-slider {
-            position: absolute; top: -6px; width: 20px; height: 20px;
-            background: #fff; border-radius: 50%; box-shadow: 0 0 10px var(--accent-blue);
-        }
-        .slider-1 { animation: slideAnim1 3s infinite alternate ease-in-out; }
-        .slider-2 { animation: slideAnim2 2.5s infinite alternate ease-in-out; }
-        .slider-3 { animation: slideAnim3 4s infinite alternate ease-in-out; }
+        .svg-scene.active { opacity: 1; z-index: 10; }
 
-        /* Étape 4 : L'IA Générative (Orbe morphing) */
-        .ia-scene {
-            width: 200px; height: 200px;
-            background: linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            animation: morphShape 6s infinite alternate ease-in-out, pulseGlow 3s infinite alternate;
-            box-shadow: 0 0 50px rgba(139, 92, 246, 0.5);
+        /* ==========================================================
+           ANIMATIONS SVG SPÉCIFIQUES
+           ========================================================== */
+        
+        /* 1. Animation Bras & Blocs */
+        @keyframes dropBlock {
+            0% { transform: translateY(-100px); opacity: 0; }
+            30% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(0); opacity: 1; }
         }
-
-        /* ==========================================================================
-           6. KEYFRAMES D'ANIMATION
-           ========================================================================== */
-        @keyframes pulseLogo { 0% { box-shadow: 0 0 10px var(--accent-glow); } 100% { box-shadow: 0 0 20px var(--accent-glow); } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-        @keyframes spinCube { 100% { transform: rotateX(360deg) rotateY(360deg); } }
-        @keyframes scanVertical { 0% { top: 0%; } 100% { top: 100%; } }
-        @keyframes slideAnim1 { 0% { left: 10%; } 100% { left: 80%; } }
-        @keyframes slideAnim2 { 0% { left: 50%; } 100% { left: 90%; } }
-        @keyframes slideAnim3 { 0% { left: 80%; } 100% { left: 20%; } }
-        @keyframes morphShape { 
-            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(0deg); } 
-            100% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; transform: rotate(180deg) scale(1.1); } 
+        @keyframes handMove {
+            0% { transform: translate(0, -150px); }
+            30% { transform: translate(0, 0); }
+            40% { transform: translate(0, -50px); }
+            100% { transform: translate(0, -150px); }
         }
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 40px #ec4899; } 100% { box-shadow: 0 0 80px #3b82f6; } }
+        .anim-hand { animation: handMove 4s infinite ease-in-out; }
+        .anim-block { animation: dropBlock 4s infinite ease-in-out; }
 
-        /* ==========================================================================
-           7. RESPONSIVE DESIGN (Mobiles & Tablettes)
-           ========================================================================== */
-        @media (max-width: 968px) {
-            header { padding: 15px 20px; }
-            .sticky-container { flex-direction: column; }
-            .steps-text { flex: 0.8; padding: 120px 20px 0 20px; align-items: flex-start; }
-            .step-text { max-width: 100%; text-align: center; left: 20px; right: 20px; }
-            .steps-visuals { flex: 1.2; width: 100%; }
-            .step-visual { width: 90%; height: 80%; }
+        /* 2. Animation Scanner */
+        @keyframes scanLaser {
+            0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.5; }
+            50% { transform: translateY(120px) scaleX(1.2); opacity: 1; }
+        }
+        @keyframes rotatePlatform {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+        .anim-laser { animation: scanLaser 3s infinite ease-in-out; }
+        .anim-platform { animation: rotatePlatform 4s infinite ease-in-out; }
+
+        /* 3. Animation Ordi / Transfert */
+        @keyframes dataFlow {
+            0% { stroke-dashoffset: 100; opacity: 1;}
+            100% { stroke-dashoffset: 0; opacity: 0;}
+        }
+        .data-line {
+            stroke-dasharray: 10;
+            animation: dataFlow 1s linear infinite;
+        }
+        @keyframes screenPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; fill: #60a5fa; }
+        }
+        .anim-screen { animation: screenPulse 2s infinite; }
+
+        /* 4. Animation Villa 3D & Piscine */
+        @keyframes waterShimmer {
+            0% { fill: #06b6d4; }
+            50% { fill: #22d3ee; }
+            100% { fill: #06b6d4; }
+        }
+        @keyframes floatHouse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .anim-water { animation: waterShimmer 3s infinite ease-in-out; }
+        .anim-house { animation: floatHouse 6s infinite ease-in-out; }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(15px); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .story-container { flex-direction: column; }
+            .text-column { width: 100%; padding: 0 20px; }
+            .visual-column { width: 100%; position: fixed; bottom: 0; top: auto; height: 50vh; z-index: -1; padding: 10px; opacity: 0.3; }
+            .step-section { height: 70vh; justify-content: flex-start; padding-top: 100px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header / Navigation -->
     <header>
-        <div class="logo">
-            <div class="logo-icon"></div>
-            ARTCHITECH
-        </div>
-        <div class="team-badge">Projet SI 26-27</div>
+        <div class="logo">ART<span>CHITECH</span></div>
+        <div class="badge">Projet SI</div>
     </header>
 
-    <!-- Section d'introduction -->
     <section class="hero">
-        <h1>De la matière brute à la réalité.</h1>
-        <p>L'outil phygital qui permet de concevoir, scanner et générer des rendus architecturaux photoréalistes en quelques secondes grâce à l'IA.</p>
+        <h1>La conception prend vie.</h1>
+        <p>Découvrez comment ArtChitech passe d'une simple manipulation de blocs physiques à une modélisation architecturale 3D ultra-réaliste.</p>
+        <svg class="scroll-down" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+        </svg>
+    </section>
+
+    <!-- ZONE DE SCROLL ROBUSTE -->
+    <div class="story-container">
         
-        <div class="scroll-indicator">
-            <!-- Icône flèche vers le bas -->
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <polyline points="19 12 12 19 5 12"></polyline>
-            </svg>
-        </div>
-    </section>
-
-    <!-- Section Interactive (Sticky Scroll) -->
-    <section id="scroll-section">
-        <div class="sticky-container">
-            
-            <!-- Les textes qui changent -->
-            <div class="steps-text">
-                <div class="step-text active">
-                    <span class="step-number">ÉTAPE 01</span>
-                    <h2>Assemblage Tangible</h2>
-                    <p>Fini les logiciels complexes dès le premier rendez-vous. Le client construit physiquement son idée avec des blocs plastiques colorés. C'est intuitif, ludique et immédiat.</p>
-                </div>
-                <div class="step-text">
-                    <span class="step-number">ÉTAPE 02</span>
-                    <h2>Numérisation 3D</h2>
-                    <p>Placez la maquette sur le plateau. Le moteur rotatif et l'axe Y entrent en action : la caméra capture la géométrie et les couleurs pour créer un squelette 3D parfait.</p>
-                </div>
-                <div class="step-text">
-                    <span class="step-number">ÉTAPE 03</span>
-                    <h2>Paramétrage Web</h2>
-                    <p>Connectez-vous à l'interface ArtChitech. Définissez le style architectural, les matériaux exacts et l'environnement lumineux. Vous gardez le contrôle total.</p>
-                </div>
-                <div class="step-text">
-                    <span class="step-number">ÉTAPE 04</span>
-                    <h2>Génération IA</h2>
-                    <p>La magie opère en temps réel. Notre IA générative fusionne la structure scannée et vos paramètres pour livrer un rendu photoréaliste époustouflant.</p>
-                </div>
+        <!-- Textes (Déclencheurs) -->
+        <div class="text-column">
+            <div class="step-section" id="step1">
+                <h2>01. La construction</h2>
+                <p>L'utilisateur manipule de véritables blocs. Notre bras automatisé ou la main de l'utilisateur dépose les volumes matériels sur le plateau. La géométrie de base est créée physiquement.</p>
             </div>
+            <div class="step-section" id="step2">
+                <h2>02. Le scan 3D</h2>
+                <p>Le plateau entre en action. Un système de caméra et de laser balaie verticalement la structure pour numériser chaque bloc, ses dimensions et sa couleur avec une précision millimétrique.</p>
+            </div>
+            <div class="step-section" id="step3">
+                <h2>03. Le traitement</h2>
+                <p>Les données brutes sont transmises instantanément à l'ordinateur. Le logiciel ArtChitech reconstitue le modèle sous forme de filaire (wireframe) et prépare le terrain pour l'intelligence artificielle.</p>
+            </div>
+            <div class="step-section" id="step4">
+                <h2>04. Le rendu final</h2>
+                <p>L'IA générative habille la structure. En quelques secondes, les blocs plastiques se transforment en une somptueuse villa ultra-réaliste avec textures HD, vitrages, pelouse et même une piscine étincelante.</p>
+            </div>
+        </div>
 
-            <!-- Les visuels animés en pur CSS -->
-            <div class="steps-visuals">
+        <!-- Visuels Fixes (Collants) -->
+        <div class="visual-column">
+            <div class="visual-frame">
                 
-                <!-- Visuel 1 : Cube 3D -->
-                <div class="step-visual active">
-                    <div class="cube-scene">
-                        <div class="cube-wrapper">
-                            <div class="cube-face front"></div>
-                            <div class="cube-face back"></div>
-                            <div class="cube-face right"></div>
-                            <div class="cube-face left"></div>
-                            <div class="cube-face top"></div>
-                            <div class="cube-face bottom"></div>
-                        </div>
-                    </div>
+                <!-- SCÈNE 1 : LA MAIN ET LES BLOCS -->
+                <div class="svg-scene active" id="vis1">
+                    <svg viewBox="0 0 400 400" width="100%" height="100%">
+                        <!-- Plateau de base -->
+                        <polygon points="200,280 320,220 200,160 80,220" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
+                        <!-- Bloc existant -->
+                        <g transform="translate(0, 10)">
+                            <polygon points="200,240 240,220 200,200 160,220" fill="#3b82f6"/>
+                            <polygon points="160,220 200,240 200,280 160,260" fill="#2563eb"/>
+                            <polygon points="240,220 200,240 200,280 240,260" fill="#1d4ed8"/>
+                        </g>
+                        <!-- Bloc qui tombe -->
+                        <g class="anim-block">
+                            <polygon points="200,180 240,160 200,140 160,160" fill="#ef4444"/>
+                            <polygon points="160,160 200,180 200,220 160,200" fill="#dc2626"/>
+                            <polygon points="240,160 200,180 200,220 240,200" fill="#b91c1c"/>
+                        </g>
+                        <!-- Pince / Main robotique -->
+                        <g class="anim-hand">
+                            <rect x="195" y="0" width="10" height="100" fill="#94a3b8"/>
+                            <path d="M 180 140 L 195 100 L 205 100 L 220 140 L 210 140 L 200 110 L 190 140 Z" fill="#cbd5e1"/>
+                            <!-- Effet de lumière -->
+                            <circle cx="200" cy="100" r="5" fill="#3b82f6"/>
+                        </g>
+                    </svg>
                 </div>
 
-                <!-- Visuel 2 : Scanner -->
-                <div class="step-visual">
-                    <div class="scanner-scene">
-                        <div class="laser-beam"></div>
-                    </div>
+                <!-- SCÈNE 2 : LE SCANNER -->
+                <div class="svg-scene" id="vis2">
+                    <svg viewBox="0 0 400 400" width="100%" height="100%">
+                        <g class="anim-platform">
+                            <!-- Plateau -->
+                            <polygon points="200,280 320,220 200,160 80,220" fill="#18181b" stroke="#06b6d4" stroke-width="1"/>
+                            <!-- Blocs scannés (filaire) -->
+                            <g stroke="#3b82f6" stroke-width="1.5" fill="rgba(59, 130, 246, 0.2)">
+                                <polygon points="200,240 240,220 200,200 160,220"/>
+                                <polygon points="160,220 200,240 200,280 160,260"/>
+                                <polygon points="240,220 200,240 200,280 240,260"/>
+                                <!-- Bloc supérieur -->
+                                <polygon points="200,180 240,160 200,140 160,160"/>
+                                <polygon points="160,160 200,180 200,220 160,200"/>
+                                <polygon points="240,160 200,180 200,220 240,200"/>
+                            </g>
+                        </g>
+                        <!-- Laser de scan -->
+                        <g class="anim-laser">
+                            <polygon points="90,160 310,160 330,170 70,170" fill="rgba(6, 182, 212, 0.4)"/>
+                            <line x1="70" y1="165" x2="330" y2="165" stroke="#06b6d4" stroke-width="3" filter="drop-shadow(0 0 5px #06b6d4)"/>
+                        </g>
+                        <!-- Piliers du scanner -->
+                        <rect x="60" y="100" width="10" height="150" fill="#3f3f46"/>
+                        <rect x="330" y="100" width="10" height="150" fill="#3f3f46"/>
+                    </svg>
                 </div>
 
-                <!-- Visuel 3 : UI / Interface -->
-                <div class="step-visual">
-                    <div class="ui-scene">
-                        <div class="ui-row"><div class="ui-slider slider-1"></div></div>
-                        <div class="ui-row"><div class="ui-slider slider-2"></div></div>
-                        <div class="ui-row"><div class="ui-slider slider-3"></div></div>
-                    </div>
+                <!-- SCÈNE 3 : L'ORDINATEUR ET LE TRAITEMENT -->
+                <div class="svg-scene" id="vis3">
+                    <svg viewBox="0 0 400 400" width="100%" height="100%">
+                        <!-- Flux de données venant d'en haut à gauche -->
+                        <path d="M 50 50 Q 150 50 200 150" fill="none" stroke="#3b82f6" stroke-width="3" class="data-line"/>
+                        <path d="M 80 80 Q 170 80 210 160" fill="none" stroke="#06b6d4" stroke-width="2" class="data-line" style="animation-delay: 0.5s;"/>
+                        
+                        <!-- Ordinateur portable Isométrique -->
+                        <g transform="translate(40, 60)">
+                            <!-- Écran -->
+                            <polygon points="160,100 280,130 280,220 160,190" fill="#27272a" stroke="#52525b" stroke-width="2"/>
+                            <!-- Contenu de l'écran (Wireframe qui se construit) -->
+                            <polygon points="175,135 265,155 265,200 175,180" fill="#09090b"/>
+                            <g class="anim-screen" stroke="#3b82f6" stroke-width="1" fill="none" transform="translate(195, 145) scale(0.4)">
+                                <polygon points="100,100 140,80 100,60 60,80"/>
+                                <polygon points="60,80 100,100 100,140 60,120"/>
+                                <polygon points="140,80 100,100 100,140 140,120"/>
+                            </g>
+                            <!-- Clavier / Base -->
+                            <polygon points="160,190 280,220 220,270 90,240" fill="#3f3f46"/>
+                            <polygon points="90,240 220,270 220,278 90,248" fill="#18181b"/>
+                            <polygon points="280,220 220,270 220,278 280,228" fill="#27272a"/>
+                            <!-- Touches simulées -->
+                            <polygon points="140,210 240,235 210,255 110,230" fill="#27272a"/>
+                        </g>
+                    </svg>
                 </div>
 
-                <!-- Visuel 4 : IA Générative -->
-                <div class="step-visual">
-                    <div class="ia-scene"></div>
+                <!-- SCÈNE 4 : LA VILLA ULTRA-RÉALISTE AVEC PISCINE -->
+                <div class="svg-scene" id="vis4">
+                    <svg viewBox="0 0 500 500" width="100%" height="100%">
+                        <g class="anim-house" transform="translate(30, 80)">
+                            <!-- Sol / Pelouse -->
+                            <polygon points="250,320 420,240 250,160 80,240" fill="#14532d" stroke="#166534" stroke-width="2"/>
+                            <polygon points="80,240 250,320 250,340 80,260" fill="#064e3b"/>
+                            <polygon points="420,240 250,320 250,340 420,260" fill="#065f46"/>
+                            
+                            <!-- PISCINE -->
+                            <!-- Trou de la piscine -->
+                            <polygon points="340,260 400,230 350,205 290,235" fill="#082f49"/>
+                            <!-- Eau animée -->
+                            <polygon points="340,258 400,228 350,203 290,233" class="anim-water"/>
+                            <!-- Reflet de l'eau -->
+                            <polygon points="300,235 340,250 380,230" fill="rgba(255,255,255,0.3)"/>
+
+                            <!-- VILLA 3D (Bloc Rez-de-chaussée) -->
+                            <!-- Façade Ombre -->
+                            <polygon points="150,230 250,280 250,220 150,170" fill="#d4d4d8"/>
+                            <!-- Façade Lumière -->
+                            <polygon points="250,280 320,245 320,185 250,220" fill="#fafafa"/>
+                            <!-- Toit RDC -->
+                            <polygon points="250,220 320,185 220,135 150,170" fill="#71717a"/>
+                            
+                            <!-- VILLA 3D (Bloc Étage - Décalé) -->
+                            <g transform="translate(10, -45)">
+                                <!-- Façade Ombre -->
+                                <polygon points="180,230 250,265 250,205 180,170" fill="#a1a1aa"/>
+                                <!-- Façade Lumière / Baie Vitrée -->
+                                <polygon points="250,265 300,240 300,180 250,205" fill="#e4e4e7"/>
+                                <!-- Vitre Bleutée -->
+                                <polygon points="260,255 290,240 290,195 260,210" fill="rgba(59, 130, 246, 0.4)" stroke="#60a5fa" stroke-width="1"/>
+                                <!-- Reflet Vitre -->
+                                <polygon points="265,245 275,240 275,200 265,205" fill="rgba(255, 255, 255, 0.5)"/>
+                                <!-- Toit Étage (Toit terrasse) -->
+                                <polygon points="250,205 300,180 230,145 180,170" fill="#27272a"/>
+                            </g>
+
+                            <!-- Détails de la maison : Porte et buissons -->
+                            <polygon points="170,225 190,235 190,205 170,195" fill="#3f3f46"/> <!-- Porte -->
+                            <!-- Arbres / Buissons Isométriques -->
+                            <polygon points="130,220 145,210 130,180 115,210" fill="#15803d"/>
+                            <polygon points="145,210 130,220 130,230 145,220" fill="#166534"/>
+                            
+                            <!-- Ombre portée de la maison sur la pelouse -->
+                            <polygon points="150,230 250,280 340,245 280,210" fill="rgba(0,0,0,0.3)"/>
+                        </g>
+                    </svg>
                 </div>
 
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Script pour l'animation au scroll -->
+    <!-- SCRIPT JAVASCRIPT ROBUSTE (IntersectionObserver) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const scrollSection = document.getElementById('scroll-section');
-            const texts = document.querySelectorAll('.step-text');
-            const visuals = document.querySelectorAll('.step-visual');
-            const totalSteps = texts.length;
+            const steps = document.querySelectorAll('.step-section');
+            const visuals = document.querySelectorAll('.svg-scene');
 
-            window.addEventListener('scroll', () => {
-                // Calcul de la position de défilement
-                const rect = scrollSection.getBoundingClientRect();
-                const scrollableDistance = scrollSection.offsetHeight - window.innerHeight;
-                const scrolled = -rect.top;
-                
-                // Progression entre 0 et 1
-                let progress = scrolled / scrollableDistance;
-                if (progress < 0) progress = 0;
-                if (progress > 1) progress = 1;
+            // L'IntersectionObserver est la méthode moderne sans bug pour détecter 
+            // quel élément est visible à l'écran.
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5 // Se déclenche quand 50% du texte est visible
+            };
 
-                // Index de l'étape active (0, 1, 2, ou 3)
-                let activeIndex = Math.floor(progress * totalSteps);
-                if (activeIndex >= totalSteps) activeIndex = totalSteps - 1; 
-
-                // Mise à jour des classes CSS pour l'affichage
-                texts.forEach((text, index) => {
-                    if(index === activeIndex) text.classList.add('active');
-                    else text.classList.remove('active');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Récupérer l'ID de l'étape en cours (ex: "step1")
+                        const currentId = entry.target.id;
+                        const stepNumber = currentId.replace('step', ''); // Récupère "1", "2", etc.
+                        
+                        // Cacher tous les visuels
+                        visuals.forEach(vis => vis.classList.remove('active'));
+                        
+                        // Afficher le bon visuel (ex: "vis1")
+                        const activeVisual = document.getElementById('vis' + stepNumber);
+                        if (activeVisual) {
+                            activeVisual.classList.add('active');
+                        }
+                    }
                 });
-                
-                visuals.forEach((visual, index) => {
-                    if(index === activeIndex) visual.classList.add('active');
-                    else visual.classList.remove('active');
-                });
+            }, observerOptions);
+
+            // Observer tous les textes
+            steps.forEach(step => {
+                observer.observe(step);
             });
         });
     </script>
