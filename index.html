@@ -1,433 +1,967 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArtChitech | Le futur de l'architecture</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #09090b;
-            --bg-card: #18181b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #3b82f6;
-            --accent-pool: #06b6d4;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArtChitech | Ingénierie Architecturale & BIM</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ARTCHITECH — BIM & ARCHITECTURAL CANVAS
+   Design System v2.0 / Lead Creative Technologist
+   ============================================================ */
+:root{
+  --bg:#0d0e11;               /* béton ardoise */
+  --bg-deep:#0a0b0e;
+  --bg-card:#121318;
+  --line-grid:rgba(255,255,255,.04);
+  --line-tech:rgba(160,165,177,.18);
+  --bronze:#d4af37;
+  --bronze-deep:#c09a58;
+  --print:#295270;
+  --cyan:#00b4d8;
+  --concrete:#22252a;
+  --stone:#3e424b;
+  --aluminium:#a0a5b1;
+  --glass:rgba(255,255,255,.03);
+  --text:#e8eaee;
+  --text-muted:#7a808c;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Plus Jakarta Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--line-grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-grid) 1px,transparent 1px);
+  background-size:40px 40px;
+  color:var(--text);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  cursor:default;
+}
+::selection{background:var(--bronze);color:#0d0e11}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+/* Subtle vignette over grid for depth */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(6,7,9,.55) 100%);
+}
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
+/* ============ HEADER ============ */
+header{
+  position:fixed;top:0;width:100%;z-index:200;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 48px;
+  background:rgba(13,14,17,.82);
+  backdrop-filter:blur(14px) saturate(1.2);
+  border-bottom:1px solid var(--line-tech);
+}
+header::after{
+  content:'';position:absolute;left:0;bottom:-1px;height:1px;width:120px;
+  background:linear-gradient(90deg,var(--bronze),transparent);
+}
+.logo{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--text)}
+.logo img{height:38px;width:auto;object-fit:contain;filter:grayscale(15%) contrast(1.05)}
+.logo-text{
+  font-size:.95rem;font-weight:800;letter-spacing:4px;text-transform:uppercase;
+}
+.logo-text span{color:var(--bronze)}
+.logo-sub{
+  font-family:var(--mono);font-size:.55rem;letter-spacing:2px;
+  color:var(--text-muted);display:block;margin-top:2px;
+}
+.seal{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;
+  color:var(--bronze-deep);
+  border:1px solid rgba(192,154,88,.45);
+  padding:8px 18px;
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,rgba(192,154,88,.08),transparent 60%);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.seal::before{
+  content:'';width:7px;height:7px;border:1px solid var(--bronze);
+  transform:rotate(45deg);flex-shrink:0;
+}
+.seal b{color:var(--bronze);font-weight:400}
 
-        /* HEADER */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: rgba(9, 9, 11, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+/* ============ HERO ============ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;padding:120px 24px 80px;position:relative;z-index:1;
+}
+.hero-tag{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:3px;color:var(--bronze-deep);
+  border:1px solid rgba(192,154,88,.3);padding:7px 16px;margin-bottom:34px;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.hero-tag::before{content:'';width:24px;height:1px;background:var(--bronze-deep)}
+.hero-tag::after{content:'';width:24px;height:1px;background:var(--bronze-deep)}
+.hero h1{
+  font-size:clamp(2.6rem,6vw,5.2rem);font-weight:800;letter-spacing:.5px;
+  line-height:1.05;text-transform:uppercase;max-width:1100px;
+}
+.hero h1 em{
+  font-style:normal;color:transparent;
+  -webkit-text-stroke:1px var(--bronze);
+  display:block;
+}
+.hero-meta{
+  display:flex;gap:44px;margin-top:38px;flex-wrap:wrap;justify-content:center;
+}
+.hero-meta div{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;color:var(--text-muted);
+  display:flex;flex-direction:column;gap:5px;text-align:left;
+}
+.hero-meta div b{color:var(--aluminium);font-weight:400}
+.hero p.lede{
+  margin-top:36px;font-size:1.05rem;color:var(--text-muted);max-width:560px;
+  line-height:1.8;font-weight:300;
+}
+.scroll-cue{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:.55rem;letter-spacing:3px;color:var(--text-muted);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.scroll-cue .bar{width:1px;height:52px;background:var(--line-tech);position:relative;overflow:hidden}
+.scroll-cue .bar::after{
+  content:'';position:absolute;top:-40%;left:0;width:100%;height:40%;
+  background:var(--bronze);animation:scrollFlow 2.2s var(--ease-out) infinite;
+}
+@keyframes scrollFlow{0%{top:-40%}100%{top:110%}}
 
-        /* Styles du logo mis à jour */
-        .logo { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            font-size: 1.5rem; 
-            font-weight: 900; 
-            letter-spacing: 1px; 
-            color: white; 
-        }
-        .logo img {
-            height: 40px; /* Ajustez cette valeur pour modifier la taille du logo */
-            width: auto;
-            object-fit: contain;
-        }
-        .logo-text span { color: var(--accent); }
-        
-        .badge { border: 1px solid var(--accent); color: var(--accent); padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+/* ============ SCROLLYTELLING LAYOUT ============ */
+.story-wrap{position:relative;z-index:1;max-width:1480px;margin:0 auto;display:flex}
+.cut-line{
+  position:absolute;left:calc(40% + 4%);top:0;bottom:0;width:1px;
+  background:var(--line-tech);
+}
+.cut-line .cut-label{
+  position:absolute;top:18px;left:10px;
+  font-family:var(--mono);font-size:.55rem;letter-spacing:2px;color:var(--text-muted);
+  writing-mode:vertical-rl;
+}
+.progress-node{
+  position:absolute;left:50%;transform:translate(-50%,-50%);
+  width:11px;height:11px;border:1px solid var(--text-muted);
+  background:var(--bg);transition:border-color .5s var(--ease-out),background .5s;
+}
+.progress-node::after{
+  content:attr(data-n);position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:.55rem;letter-spacing:1px;color:var(--text-muted);
+  transition:color .5s;
+}
+.progress-node.lit{border-color:var(--bronze);background:var(--bronze)}
+.progress-node.lit::after{color:var(--bronze)}
+.progress-fill{
+  position:absolute;left:0;top:0;width:100%;height:0%;
+  background:linear-gradient(180deg,var(--bronze),var(--bronze-deep));
+  transition:height .8s var(--ease-out);
+}
 
-        /* HERO */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            background: radial-gradient(circle at top, #1e1e24 0%, var(--bg-dark) 100%);
-        }
+.text-column{width:40%;padding:0 6% 0 5%}
+.step-section{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:60px 0;position:relative;
+}
+.step-index{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:3px;color:var(--bronze-deep);
+  display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.step-index::after{content:'';flex:0 0 40px;height:1px;background:rgba(192,154,88,.5)}
+.step-section h2{
+  font-size:clamp(1.7rem,2.6vw,2.6rem);font-weight:800;text-transform:uppercase;
+  letter-spacing:2px;line-height:1.15;margin-bottom:22px;
+}
+.step-section h2 span{color:transparent;-webkit-text-stroke:1px var(--bronze)}
+.step-section p{
+  font-size:1rem;color:var(--text-muted);line-height:1.9;font-weight:300;max-width:440px;
+}
+.step-specs{
+  margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--line-tech);border:1px solid var(--line-tech);
+  max-width:440px;
+}
+.step-specs div{
+  background:var(--bg-deep);padding:12px 14px;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:1px;color:var(--text-muted);
+  display:flex;flex-direction:column;gap:4px;
+}
+.step-specs div b{color:var(--aluminium);font-weight:400;font-size:.62rem}
 
-        .hero h1 { font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 900; margin-bottom: 20px; }
-        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; margin-bottom: 40px; }
+/* ============ VISUAL STAGE (STICKY) ============ */
+.visual-column{
+  width:60%;position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:84px 5% 40px 0;
+}
+.stage{position:relative;width:100%;height:min(76vh,700px)}
 
-        .scroll-down {
-            animation: bounce 2s infinite;
-            opacity: 0.7;
-        }
+/* Architectural frame */
+.stage-frame{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.015));
+  border:1px solid var(--line-tech);
+  pointer-events:none;z-index:30;
+}
+/* Corner alignment marks */
+.corner{position:absolute;width:22px;height:22px;z-index:40;pointer-events:none}
+.corner::before,.corner::after{content:'';position:absolute;background:var(--bronze)}
+.corner::before{width:22px;height:1px}
+.corner::after{width:1px;height:22px}
+.corner.tl{top:-1px;left:-1px}.corner.tl::before{top:0;left:0}.corner.tl::after{top:0;left:0}
+.corner.tr{top:-1px;right:-1px}.corner.tr::before{top:0;right:0}.corner.tr::after{top:0;right:0}
+.corner.bl{bottom:-1px;left:-1px}.corner.bl::before{bottom:0;left:0}.corner.bl::after{bottom:0;left:0}
+.corner.br{bottom:-1px;right:-1px}.corner.br::before{bottom:0;right:0}.corner.br::after{bottom:0;right:0}
 
-        /* SECTION STICKY ROBUSTE */
-        .story-container {
-            display: flex;
-            position: relative;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+/* Graduated rulers (fixed edges) */
+.ruler{position:absolute;z-index:35;pointer-events:none;opacity:.7}
+.ruler-x{top:-26px;left:22px;right:22px;height:16px;
+  background:repeating-linear-gradient(90deg,var(--line-tech) 0 1px,transparent 1px 20px);
+  border-bottom:1px solid var(--line-tech);
+}
+.ruler-y{left:-26px;top:22px;bottom:22px;width:16px;
+  background:repeating-linear-gradient(180deg,var(--line-tech) 0 1px,transparent 1px 20px);
+  border-right:1px solid var(--line-tech);
+}
+.ruler-label{
+  position:absolute;font-family:var(--mono);font-size:.5rem;letter-spacing:2px;color:var(--text-muted);
+}
+.ruler-label.rt{top:-24px;right:24px}
+.ruler-label.rb{bottom:-24px;left:24px}
 
-        .text-column {
-            width: 40%;
-            padding: 0 5%;
-        }
+/* HUD overlay inside frame */
+.hud{position:absolute;z-index:40;font-family:var(--mono);font-size:.52rem;letter-spacing:1.5px;color:var(--text-muted);pointer-events:none}
+.hud-tl{top:14px;left:16px}
+.hud-br{bottom:14px;right:16px;text-align:right}
+.hud-tl b,.hud-br b{color:var(--bronze-deep);font-weight:400}
+.hud .live{color:var(--cyan)}
+.hud .live::before{
+  content:'●';margin-right:6px;animation:pulseDot 1.6s infinite;
+}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.25}}
 
-        .step-section {
-            height: 100vh; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+/* Scenes with cinematic mask/fade */
+.svg-scene{
+  position:absolute;inset:0;
+  opacity:0;transform:translateY(26px) scale(.985);
+  transition:opacity .9s var(--ease-out),transform .9s var(--ease-out);
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.svg-scene.active{opacity:1;transform:translateY(0) scale(1);z-index:10;pointer-events:auto}
+.svg-scene svg{width:100%;height:100%}
 
-        .step-section h2 { font-size: 3rem; margin-bottom: 20px; color: var(--accent); }
-        .step-section p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.8; }
+/* Crosshair cursor inside visual zone */
+.stage.hovering{cursor:none}
+.crosshair{position:absolute;z-index:60;pointer-events:none;opacity:0;transition:opacity .3s}
+.stage.hovering .crosshair{opacity:1}
+.crosshair .ch-line{position:absolute;background:rgba(212,175,55,.55)}
+.crosshair .h{width:100vw;height:1px;left:-50vw;top:0}
+.crosshair .v{height:100vh;width:1px;top:-50vh;left:0}
+.crosshair .ch-dot{
+  position:absolute;width:5px;height:5px;border:1px solid var(--bronze);
+  transform:translate(-50%,-50%) rotate(45deg);left:0;top:0;
+}
+.crosshair .ch-coord{
+  position:absolute;left:14px;top:10px;white-space:nowrap;
+  font-family:var(--mono);font-size:.52rem;letter-spacing:1px;color:var(--bronze-deep);
+}
 
-        .visual-column {
-            width: 60%;
-            height: 100vh;
-            position: sticky;
-            top: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-        }
+/* ==========================================================
+   SVG SCENE STYLES & ANIMATIONS
+   ========================================================== */
+.dim-line{stroke:var(--bronze-deep);stroke-width:.8;fill:none}
+.dim-tick{stroke:var(--bronze-deep);stroke-width:.8}
+.dim-text{font-family:var(--mono);font-size:8.5px;fill:var(--bronze-deep);letter-spacing:1px}
+.tech-text{font-family:var(--mono);font-size:7px;fill:#5b626f;letter-spacing:1.2px}
+.mono-sm{font-family:var(--mono);font-size:6.5px;fill:#4a505c;letter-spacing:1px}
 
-        .visual-frame {
-            width: 100%;
-            height: 80%;
-            background: var(--bg-card);
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
+/* Scene 1 — materialization */
+@keyframes blockDrop{0%{transform:translateY(-70px);opacity:0}35%{transform:translateY(0);opacity:1}80%{transform:translateY(0);opacity:1}100%{transform:translateY(0);opacity:1}}
+@keyframes gantry{0%,100%{transform:translate(0,-46px)}30%{transform:translate(0,0)}45%{transform:translate(0,-10px)}}
+@keyframes ghostBlink{0%,100%{opacity:.35}50%{opacity:.85}}
+.anim-block1{animation:blockDrop 5s var(--ease-out) infinite}
+.anim-gantry{animation:gantry 5s var(--ease-out) infinite}
+.anim-ghost{animation:ghostBlink 2.4s infinite}
 
-        .svg-scene {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            transition: opacity 0.6s ease-in-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+/* Scene 2 — LiDAR scan */
+@keyframes scanSweep{0%{transform:translateY(-30px);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(190px);opacity:0}}
+@keyframes lidarDot{0%,30%{opacity:0}45%,85%{opacity:.95}100%{opacity:.15}}
+.anim-scanline{animation:scanSweep 4.5s linear infinite}
+.lidar-dot{opacity:0}
+.anim-scanline .lidar-dot, .lidar-group.lit .lidar-dot{animation:lidarDot 4.5s linear infinite}
+.scan-plane{animation:scanSweep 4.5s linear infinite}
 
-        .svg-scene.active { opacity: 1; z-index: 10; }
+/* Scene 3 — CAD matrix & IA */
+@keyframes dashFlow{to{stroke-dashoffset:-40}}
+@keyframes screenBuild{0%,15%{opacity:0}35%,100%{opacity:1}}
+@keyframes metaScroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+@keyframes cpuPulse{0%,100%{opacity:.35}50%{opacity:1}}
+.flow-line{stroke-dasharray:6 6;animation:dashFlow 1.2s linear infinite}
+.anim-build{animation:screenBuild 6s var(--ease-out) infinite}
+.anim-cpu{animation:cpuPulse 2s infinite}
+.meta-col{animation:metaScroll 14s linear infinite}
 
-        /* ==========================================================
-           ANIMATIONS SVG SPÉCIFIQUES
-           ========================================================== */
-        
-        /* 1. Animation Bras & Blocs */
-        @keyframes dropBlock {
-            0% { transform: translateY(-100px); opacity: 0; }
-            30% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes handMove {
-            0% { transform: translate(0, -150px); }
-            30% { transform: translate(0, 0); }
-            40% { transform: translate(0, -50px); }
-            100% { transform: translate(0, -150px); }
-        }
-        .anim-hand { animation: handMove 4s infinite ease-in-out; }
-        .anim-block { animation: dropBlock 4s infinite ease-in-out; }
+/* Scene 4 — villa */
+@keyframes waterShimmer{0%,100%{fill:#0e7490}50%{fill:#0891b2}}
+@keyframes reflectSlide{0%,100%{transform:translateX(0);opacity:.5}50%{transform:translateX(14px);opacity:.85}}
+@keyframes houseSettle{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes groundLight{0%,70%,100%{opacity:.25}80%,90%{opacity:1}}
+.anim-water{animation:waterShimmer 4s ease-in-out infinite}
+.anim-reflect{animation:reflectSlide 5s ease-in-out infinite}
+.anim-house4{animation:houseSettle 8s ease-in-out infinite}
+.anim-glight{animation:groundLight 6s infinite}
 
-        /* 2. Animation Scanner */
-        @keyframes scanLaser {
-            0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.5; }
-            50% { transform: translateY(120px) scaleX(1.2); opacity: 1; }
-        }
-        @keyframes rotatePlatform {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0); }
-        }
-        .anim-laser { animation: scanLaser 3s infinite ease-in-out; }
-        .anim-platform { animation: rotatePlatform 4s infinite ease-in-out; }
+/* ============ FOOTER ============ */
+footer{
+  position:relative;z-index:1;border-top:1px solid var(--line-tech);
+  padding:60px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+}
+footer .f-left{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;color:var(--text-muted)}
+footer .f-left b{color:var(--bronze-deep);font-weight:400}
+footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;color:#4a505c}
 
-        /* 3. Animation Ordi / Transfert */
-        @keyframes dataFlow {
-            0% { stroke-dashoffset: 100; opacity: 1;}
-            100% { stroke-dashoffset: 0; opacity: 0;}
-        }
-        .data-line {
-            stroke-dasharray: 10;
-            animation: dataFlow 1s linear infinite;
-        }
-        @keyframes screenPulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; fill: #60a5fa; }
-        }
-        .anim-screen { animation: screenPulse 2s infinite; }
-
-        /* 4. Animation Villa 3D & Piscine */
-        @keyframes waterShimmer {
-            0% { fill: #06b6d4; }
-            50% { fill: #22d3ee; }
-            100% { fill: #06b6d4; }
-        }
-        @keyframes floatHouse {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .anim-water { animation: waterShimmer 3s infinite ease-in-out; }
-        .anim-house { animation: floatHouse 6s infinite ease-in-out; }
-
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(15px); } }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .story-container { flex-direction: column; }
-            .text-column { width: 100%; padding: 0 20px; }
-            .visual-column { width: 100%; position: fixed; bottom: 0; top: auto; height: 50vh; z-index: -1; padding: 10px; opacity: 0.3; }
-            .step-section { height: 70vh; justify-content: flex-start; padding-top: 100px; }
-            header { padding: 15px 20px; }
-            .logo img { height: 30px; }
-        }
-    </style>
+/* ============ RESPONSIVE ============ */
+@media (max-width:960px){
+  header{padding:14px 20px}
+  .logo img{height:30px}
+  .logo-sub{display:none}
+  .seal{font-size:.52rem;padding:6px 12px}
+  .story-wrap{display:block}
+  .cut-line{display:none}
+  .text-column{width:100%;padding:0 24px}
+  .step-section{min-height:62vh;justify-content:flex-start;padding-top:14vh}
+  .visual-column{
+    width:100%;height:46vh;position:fixed;bottom:0;left:0;top:auto;
+    padding:0;z-index:5;opacity:.35;pointer-events:none;
+  }
+  .stage{height:46vh}
+  .hud,.ruler,.ruler-label,.crosshair{display:none}
+  .stage-frame{border:none;background:none}
+  .corner{display:none}
+  .step-specs{grid-template-columns:1fr 1fr}
+  footer{padding:40px 24px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.2s!important}
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">
-            <!-- Intégration du logo image -->
-            <img src="logo_artchitech.png" alt="Logo ArtChitech">
-            <div class="logo-text">ART<span>CHITECH</span></div>
-        </div>
-        <div class="badge">Projet SI</div>
-    </header>
-
-    <section class="hero">
-        <h1>La conception prend vie.</h1>
-        <p>Découvrez comment ArtChitech passe d'une simple manipulation de blocs physiques à une modélisation architecturale 3D ultra-réaliste.</p>
-        <svg class="scroll-down" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 5v14M19 12l-7 7-7-7"/>
-        </svg>
-    </section>
-
-    <!-- ZONE DE SCROLL ROBUSTE -->
-    <div class="story-container">
-        
-        <!-- Textes (Déclencheurs) -->
-        <div class="text-column">
-            <div class="step-section" id="step1">
-                <h2>01. La construction</h2>
-                <p>L'utilisateur manipule de véritables blocs. Notre bras automatisé ou la main de l'utilisateur dépose les volumes matériels sur le plateau. La géométrie de base est créée physiquement.</p>
-            </div>
-            <div class="step-section" id="step2">
-                <h2>02. Le scan 3D</h2>
-                <p>Le plateau entre en action. Un système de caméra et de laser balaie verticalement la structure pour numériser chaque bloc, ses dimensions et sa couleur avec une précision millimétrique.</p>
-            </div>
-            <div class="step-section" id="step3">
-                <h2>03. Le traitement</h2>
-                <p>Les données brutes sont transmises instantanément à l'ordinateur. Le logiciel ArtChitech reconstitue le modèle sous forme de filaire (wireframe) et prépare le terrain pour l'intelligence artificielle.</p>
-            </div>
-            <div class="step-section" id="step4">
-                <h2>04. Le rendu final</h2>
-                <p>L'IA générative habille la structure. En quelques secondes, les blocs plastiques se transforment en une somptueuse villa ultra-réaliste avec textures HD, vitrages, pelouse et même une piscine étincelante.</p>
-            </div>
-        </div>
-
-        <!-- Visuels Fixes (Collants) -->
-        <div class="visual-column">
-            <div class="visual-frame">
-                
-                <!-- SCÈNE 1 : LA MAIN ET LES BLOCS -->
-                <div class="svg-scene active" id="vis1">
-                    <svg viewBox="0 0 400 400" width="100%" height="100%">
-                        <!-- Plateau de base -->
-                        <polygon points="200,280 320,220 200,160 80,220" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
-                        <!-- Bloc existant -->
-                        <g transform="translate(0, 10)">
-                            <polygon points="200,240 240,220 200,200 160,220" fill="#3b82f6"/>
-                            <polygon points="160,220 200,240 200,280 160,260" fill="#2563eb"/>
-                            <polygon points="240,220 200,240 200,280 240,260" fill="#1d4ed8"/>
-                        </g>
-                        <!-- Bloc qui tombe -->
-                        <g class="anim-block">
-                            <polygon points="200,180 240,160 200,140 160,160" fill="#ef4444"/>
-                            <polygon points="160,160 200,180 200,220 160,200" fill="#dc2626"/>
-                            <polygon points="240,160 200,180 200,220 240,200" fill="#b91c1c"/>
-                        </g>
-                        <!-- Pince / Main robotique -->
-                        <g class="anim-hand">
-                            <rect x="195" y="0" width="10" height="100" fill="#94a3b8"/>
-                            <path d="M 180 140 L 195 100 L 205 100 L 220 140 L 210 140 L 200 110 L 190 140 Z" fill="#cbd5e1"/>
-                            <!-- Effet de lumière -->
-                            <circle cx="200" cy="100" r="5" fill="#3b82f6"/>
-                        </g>
-                    </svg>
-                </div>
-
-                <!-- SCÈNE 2 : LE SCANNER -->
-                <div class="svg-scene" id="vis2">
-                    <svg viewBox="0 0 400 400" width="100%" height="100%">
-                        <g class="anim-platform">
-                            <!-- Plateau -->
-                            <polygon points="200,280 320,220 200,160 80,220" fill="#18181b" stroke="#06b6d4" stroke-width="1"/>
-                            <!-- Blocs scannés (filaire) -->
-                            <g stroke="#3b82f6" stroke-width="1.5" fill="rgba(59, 130, 246, 0.2)">
-                                <polygon points="200,240 240,220 200,200 160,220"/>
-                                <polygon points="160,220 200,240 200,280 160,260"/>
-                                <polygon points="240,220 200,240 200,280 240,260"/>
-                                <!-- Bloc supérieur -->
-                                <polygon points="200,180 240,160 200,140 160,160"/>
-                                <polygon points="160,160 200,180 200,220 160,200"/>
-                                <polygon points="240,160 200,180 200,220 240,200"/>
-                            </g>
-                        </g>
-                        <!-- Laser de scan -->
-                        <g class="anim-laser">
-                            <polygon points="90,160 310,160 330,170 70,170" fill="rgba(6, 182, 212, 0.4)"/>
-                            <line x1="70" y1="165" x2="330" y2="165" stroke="#06b6d4" stroke-width="3" filter="drop-shadow(0 0 5px #06b6d4)"/>
-                        </g>
-                        <!-- Piliers du scanner -->
-                        <rect x="60" y="100" width="10" height="150" fill="#3f3f46"/>
-                        <rect x="330" y="100" width="10" height="150" fill="#3f3f46"/>
-                    </svg>
-                </div>
-
-                <!-- SCÈNE 3 : L'ORDINATEUR ET LE TRAITEMENT -->
-                <div class="svg-scene" id="vis3">
-                    <svg viewBox="0 0 400 400" width="100%" height="100%">
-                        <!-- Flux de données venant d'en haut à gauche -->
-                        <path d="M 50 50 Q 150 50 200 150" fill="none" stroke="#3b82f6" stroke-width="3" class="data-line"/>
-                        <path d="M 80 80 Q 170 80 210 160" fill="none" stroke="#06b6d4" stroke-width="2" class="data-line" style="animation-delay: 0.5s;"/>
-                        
-                        <!-- Ordinateur portable Isométrique -->
-                        <g transform="translate(40, 60)">
-                            <!-- Écran -->
-                            <polygon points="160,100 280,130 280,220 160,190" fill="#27272a" stroke="#52525b" stroke-width="2"/>
-                            <!-- Contenu de l'écran (Wireframe qui se construit) -->
-                            <polygon points="175,135 265,155 265,200 175,180" fill="#09090b"/>
-                            <g class="anim-screen" stroke="#3b82f6" stroke-width="1" fill="none" transform="translate(195, 145) scale(0.4)">
-                                <polygon points="100,100 140,80 100,60 60,80"/>
-                                <polygon points="60,80 100,100 100,140 60,120"/>
-                                <polygon points="140,80 100,100 100,140 140,120"/>
-                            </g>
-                            <!-- Clavier / Base -->
-                            <polygon points="160,190 280,220 220,270 90,240" fill="#3f3f46"/>
-                            <polygon points="90,240 220,270 220,278 90,248" fill="#18181b"/>
-                            <polygon points="280,220 220,270 220,278 280,228" fill="#27272a"/>
-                            <!-- Touches simulées -->
-                            <polygon points="140,210 240,235 210,255 110,230" fill="#27272a"/>
-                        </g>
-                    </svg>
-                </div>
-
-                <!-- SCÈNE 4 : LA VILLA ULTRA-RÉALISTE AVEC PISCINE -->
-                <div class="svg-scene" id="vis4">
-                    <svg viewBox="0 0 500 500" width="100%" height="100%">
-                        <g class="anim-house" transform="translate(30, 80)">
-                            <!-- Sol / Pelouse -->
-                            <polygon points="250,320 420,240 250,160 80,240" fill="#14532d" stroke="#166534" stroke-width="2"/>
-                            <polygon points="80,240 250,320 250,340 80,260" fill="#064e3b"/>
-                            <polygon points="420,240 250,320 250,340 420,260" fill="#065f46"/>
-                            
-                            <!-- PISCINE -->
-                            <!-- Trou de la piscine -->
-                            <polygon points="340,260 400,230 350,205 290,235" fill="#082f49"/>
-                            <!-- Eau animée -->
-                            <polygon points="340,258 400,228 350,203 290,233" class="anim-water"/>
-                            <!-- Reflet de l'eau -->
-                            <polygon points="300,235 340,250 380,230" fill="rgba(255,255,255,0.3)"/>
-
-                            <!-- VILLA 3D (Bloc Rez-de-chaussée) -->
-                            <!-- Façade Ombre -->
-                            <polygon points="150,230 250,280 250,220 150,170" fill="#d4d4d8"/>
-                            <!-- Façade Lumière -->
-                            <polygon points="250,280 320,245 320,185 250,220" fill="#fafafa"/>
-                            <!-- Toit RDC -->
-                            <polygon points="250,220 320,185 220,135 150,170" fill="#71717a"/>
-                            
-                            <!-- VILLA 3D (Bloc Étage - Décalé) -->
-                            <g transform="translate(10, -45)">
-                                <!-- Façade Ombre -->
-                                <polygon points="180,230 250,265 250,205 180,170" fill="#a1a1aa"/>
-                                <!-- Façade Lumière / Baie Vitrée -->
-                                <polygon points="250,265 300,240 300,180 250,205" fill="#e4e4e7"/>
-                                <!-- Vitre Bleutée -->
-                                <polygon points="260,255 290,240 290,195 260,210" fill="rgba(59, 130, 246, 0.4)" stroke="#60a5fa" stroke-width="1"/>
-                                <!-- Reflet Vitre -->
-                                <polygon points="265,245 275,240 275,200 265,205" fill="rgba(255, 255, 255, 0.5)"/>
-                                <!-- Toit Étage (Toit terrasse) -->
-                                <polygon points="250,205 300,180 230,145 180,170" fill="#27272a"/>
-                            </g>
-
-                            <!-- Détails de la maison : Porte et buissons -->
-                            <polygon points="170,225 190,235 190,205 170,195" fill="#3f3f46"/> <!-- Porte -->
-                            <!-- Arbres / Buissons Isométriques -->
-                            <polygon points="130,220 145,210 130,180 115,210" fill="#15803d"/>
-                            <polygon points="145,210 130,220 130,230 145,220" fill="#166534"/>
-                            
-                            <!-- Ombre portée de la maison sur la pelouse -->
-                            <polygon points="150,230 250,280 340,245 280,210" fill="rgba(0,0,0,0.3)"/>
-                        </g>
-                    </svg>
-                </div>
-
-            </div>
-        </div>
+<!-- ================= HEADER ================= -->
+<header>
+  <a class="logo" href="#">
+    <img src="logo_artchitech.png" alt="Logo ArtChitech">
+    <div>
+      <div class="logo-text">ART<span>CHITECH</span></div>
+      <span class="logo-sub">BIM · SCAN · GENERATIVE RENDER</span>
     </div>
+  </a>
+  <div class="seal">SPECIFICATION // <b>SI-PROJECT-2026</b></div>
+</header>
 
-    <!-- SCRIPT JAVASCRIPT ROBUSTE (IntersectionObserver) -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const steps = document.querySelectorAll('.step-section');
-            const visuals = document.querySelectorAll('.svg-scene');
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <span class="hero-tag">SYSTEME DE CONCEPTION PHYSIQUE → NUMERIQUE</span>
+  <h1>La matière devient<em>Architecture.</em></h1>
+  <p class="lede">ArtChitech convertit une manipulation de blocs matériels en jumeau numérique BIM, puis en rendu photoréaliste généré par IA. Quatre étapes. Une précision millimétrique.</p>
+  <div class="hero-meta">
+    <div><b>SCALE</b>1:100</div>
+    <div><b>COORD</b>45.7589 N / 4.8352 E</div>
+    <div><b>STATUS</b><span style="color:var(--cyan)">RENDERING_OK</span></div>
+    <div><b>REV</b>2026.10 — VALIDÉ</div>
+  </div>
+  <div class="scroll-cue">
+    <span>SCROLL // SECTIONNER</span>
+    <div class="bar"></div>
+  </div>
+</section>
 
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5 
-            };
+<!-- ================= SCROLLYTELLING ================= -->
+<div class="story-wrap">
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const currentId = entry.target.id;
-                        const stepNumber = currentId.replace('step', ''); 
-                        
-                        visuals.forEach(vis => vis.classList.remove('active'));
-                        
-                        const activeVisual = document.getElementById('vis' + stepNumber);
-                        if (activeVisual) {
-                            activeVisual.classList.add('active');
-                        }
-                    }
-                });
-            }, observerOptions);
+  <!-- Technical cut line + progress -->
+  <div class="cut-line">
+    <span class="cut-label">LIGNE DE COUPE A—A'</span>
+    <div class="progress-fill" id="progFill"></div>
+    <div class="progress-node" data-n="01" style="top:12.5%"></div>
+    <div class="progress-node" data-n="02" style="top:37.5%"></div>
+    <div class="progress-node" data-n="03" style="top:62.5%"></div>
+    <div class="progress-node" data-n="04" style="top:87.5%"></div>
+  </div>
 
-            steps.forEach(step => {
-                observer.observe(step);
-            });
-        });
-    </script>
+  <!-- TEXTS -->
+  <div class="text-column">
+    <div class="step-section" id="step1">
+      <div class="step-index">PHASE 01 / 04 — ASSEMBLAGE</div>
+      <h2>Matériali<br><span>sation</span></h2>
+      <p>L'utilisateur compose la volumétrie avec des blocs matériels — béton, bois, verre — sur le plateau d'assemblage. Un portique motorisé assiste le dépôt. La géométrie de base naît physiquement, cotée en temps réel.</p>
+      <div class="step-specs">
+        <div><b>PLATEAU</b>600 × 600 MM</div>
+        <div><b>TOLÉRANCE</b>± 0.5 MM</div>
+        <div><b>MATÉRIAUX</b>BÉTON / CHÊNE / VERRE</div>
+        <div><b>ASSISTANCE</b>PORTIQUE CNC</div>
+      </div>
+    </div>
+    <div class="step-section" id="step2">
+      <div class="step-index">PHASE 02 / 04 — NUMÉRISATION</div>
+      <h2>Numéri<br><span>sation LiDAR</span></h2>
+      <p>Double axe de balayage laser vertical. Chaque face est balayée à haute fréquence ; le nuage de points 3D s'allume au passage du faisceau, capturant dimensions, teintes et textures à la précision millimétrique.</p>
+      <div class="step-specs">
+        <div><b>FAISCEAU</b>CLASS 1 — 635 NM</div>
+        <div><b>RÉSOLUTION</b>0.1 MM / PT</div>
+        <div><b>NUAGE</b>~2.4 M POINTS</div>
+        <div><b>CYCLE</b>4.5 S / PASSAGE</div>
+      </div>
+    </div>
+    <div class="step-section" id="step3">
+      <div class="step-index">PHASE 03 / 04 — TRAITEMENT</div>
+      <h2>Matrice <span>CAO / IA</span></h2>
+      <p>Les données brutes transitent vers la station de travail. Le moteur BIM reconstitue le wireframe, vérifie les contraintes structurelles et prépare le maillage pour le pipeline de rendu génératif.</p>
+      <div class="step-specs">
+        <div><b>PIPELINE</b>MESH → BIM → GAN</div>
+        <div><b>CONTRAINTES</b>CHECK_AUTO</div>
+        <div><b>LATENCE</b>&lt; 120 MS</div>
+        <div><b>STATUS</b><span style="color:var(--cyan)">IA_READY</span></div>
+      </div>
+    </div>
+    <div class="step-section" id="step4">
+      <div class="step-index">PHASE 04 / 04 — LIVRAISON</div>
+      <h2>Projet <span>Livré</span></h2>
+      <p>L'IA générative habille la structure : villa à porte-à-faux, bardage bois vertical, baies vitrées à reflets, piscine à débordement et paysage aménagé. Le bloc devient bâtiment. Le brouillon devient commande.</p>
+      <div class="step-specs">
+        <div><b>RENDU</b>4K — PBR HD</div>
+        <div><b>STYLE</b>CONTEMPORAIN / BOIS</div>
+        <div><b>PISCINE</b>DÉBORDEMENT OUEST</div>
+        <div><b>LIVRAISON</b>DCE PRÊT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUAL STAGE -->
+  <div class="visual-column">
+    <div class="stage" id="stage">
+
+      <div class="stage-frame"></div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="ruler ruler-x"></div>
+      <div class="ruler ruler-y"></div>
+      <span class="ruler-label rt">SCALE 1:100</span>
+      <span class="ruler-label rb">GRID 40 · PROJ. ISOMÉTRIQUE 30°</span>
+
+      <div class="hud hud-tl" id="hudTL"><b>VIEW_01</b> // ASSEMBLAGE · <span class="live">TRACKING</span></div>
+      <div class="hud hud-br" id="hudBR">COORD: 45.7589, 4.8352<br><b>STATUS:</b> OK</div>
+
+      <!-- Crosshair -->
+      <div class="crosshair" id="crosshair">
+        <div class="ch-line h"></div>
+        <div class="ch-line v"></div>
+        <div class="ch-dot"></div>
+        <div class="ch-coord" id="chCoord">X 0000 · Y 0000</div>
+      </div>
+
+      <!-- ========== SCENE 1 : ASSEMBLAGE ========== -->
+      <div class="svg-scene active" id="vis1">
+        <svg viewBox="0 0 520 460">
+          <defs>
+            <linearGradient id="gConcrete" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3e424b"/><stop offset="1" stop-color="#22252a"/>
+            </linearGradient>
+            <linearGradient id="gWood" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8a6a42"/><stop offset="1" stop-color="#5c4527"/>
+            </linearGradient>
+            <linearGradient id="gGlassB" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(0,180,216,.35)"/><stop offset="1" stop-color="rgba(41,82,112,.5)"/>
+            </linearGradient>
+            <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(212,175,55,.18)" stroke-width="1"/>
+            </pattern>
+          </defs>
+
+          <!-- Ground grid reference -->
+          <g stroke="rgba(160,165,177,.1)" stroke-width=".5">
+            <line x1="40" y1="400" x2="480" y2="400"/><line x1="40" y1="410" x2="480" y2="410"/>
+          </g>
+
+          <!-- Assembly plate -->
+          <polygon points="260,330 430,245 260,160 90,245" fill="#17181c" stroke="#3e424b" stroke-width="1.2"/>
+          <polygon points="90,245 260,330 260,342 90,257" fill="#101114"/>
+          <polygon points="430,245 260,330 260,342 430,257" fill="#0c0d10"/>
+          <polygon points="260,330 430,245 260,160 90,245" fill="url(#hatch)" opacity=".5"/>
+
+          <!-- Ghost target outline -->
+          <g class="anim-ghost" stroke="rgba(212,175,55,.7)" stroke-width=".8" stroke-dasharray="4 4" fill="none">
+            <polygon points="260,270 320,240 260,210 200,240"/>
+            <polygon points="200,240 260,270 260,330 200,300"/>
+            <polygon points="320,240 260,270 260,330 320,300"/>
+          </g>
+
+          <!-- Block A : concrete (placed) -->
+          <g>
+            <polygon points="205,262 250,240 205,218 160,240" fill="url(#gConcrete)" stroke="#4a4f59" stroke-width=".8"/>
+            <polygon points="160,240 205,262 205,308 160,286" fill="#1b1d22" stroke="#3e424b" stroke-width=".8"/>
+            <polygon points="250,240 205,262 205,308 250,286" fill="#14161a" stroke="#31353d" stroke-width=".8"/>
+            <text x="205" y="248" text-anchor="middle" class="mono-sm">B01-BÉTON</text>
+          </g>
+          <!-- Block B : wood (placed) -->
+          <g>
+            <polygon points="290,278 322,262 290,246 258,262" fill="url(#gWood)" stroke="#6e5433" stroke-width=".8"/>
+            <polygon points="258,262 290,278 290,312 258,296" fill="#4a3820" stroke="#3d2f1b" stroke-width=".8"/>
+            <polygon points="322,262 290,278 290,312 322,296" fill="#3a2c18" stroke="#2e2413" stroke-width=".8"/>
+            <line x1="264" y1="268" x2="264" y2="300" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
+            <line x1="274" y1="274" x2="274" y2="306" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
+            <text x="290" y="266" text-anchor="middle" class="mono-sm">B02-CHÊNE</text>
+          </g>
+          <!-- Block C : glass (dropped by gantry) -->
+          <g class="anim-block1">
+            <polygon points="262,182 296,165 262,148 228,165" fill="url(#gGlassB)" stroke="#00b4d8" stroke-width=".9" opacity=".95"/>
+            <polygon points="228,165 262,182 262,222 228,205" fill="rgba(0,140,180,.22)" stroke="#007a94" stroke-width=".8"/>
+            <polygon points="296,165 262,182 262,222 296,205" fill="rgba(0,100,130,.28)" stroke="#00667c" stroke-width=".8"/>
+            <line x1="236" y1="160" x2="254" y2="172" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+          </g>
+
+          <!-- Gantry crane -->
+          <g class="anim-gantry">
+            <rect x="88" y="30" width="5" height="215" fill="#2c2f36"/>
+            <rect x="427" y="30" width="5" height="215" fill="#2c2f36"/>
+            <rect x="80" y="26" width="360" height="8" fill="#22252a" stroke="#3e424b" stroke-width=".8"/>
+            <rect x="252" y="34" width="16" height="12" fill="#3e424b"/>
+            <line x1="260" y1="46" x2="260" y2="96" stroke="#a0a5b1" stroke-width="1"/>
+            <!-- Gripper -->
+            <path d="M246 96 L274 96 L270 108 L250 108 Z" fill="#c09a58" opacity=".9"/>
+            <line x1="250" y1="108" x2="250" y2="116" stroke="#c09a58" stroke-width="2"/>
+            <line x1="270" y1="108" x2="270" y2="116" stroke="#c09a58" stroke-width="2"/>
+            <circle cx="260" cy="120" r="10" fill="none" stroke="rgba(0,180,216,.6)" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="260" y="123" text-anchor="middle" class="mono-sm" fill="#00b4d8">MAGNET</text>
+          </g>
+
+          <!-- Dimension callouts -->
+          <g>
+            <line x1="90" y1="245" x2="60" y2="230" class="dim-line"/>
+            <line x1="430" y1="245" x2="460" y2="230" class="dim-line"/>
+            <line x1="60" y1="230" x2="460" y2="230" class="dim-line"/>
+            <line x1="60" y1="226" x2="60" y2="234" class="dim-tick"/>
+            <line x1="460" y1="226" x2="460" y2="234" class="dim-tick"/>
+            <rect x="226" y="222" width="68" height="13" fill="#0d0e11"/>
+            <text x="260" y="231" text-anchor="middle" class="dim-text">600 MM</text>
+          </g>
+          <g>
+            <line x1="460" y1="230" x2="490" y2="215" class="dim-line"/>
+            <line x1="490" y1="215" x2="490" y2="330" class="dim-line"/>
+            <line x1="486" y1="215" x2="494" y2="215" class="dim-tick"/>
+            <line x1="486" y1="330" x2="494" y2="330" class="dim-tick"/>
+            <text x="500" y="276" class="dim-text" transform="rotate(90 500 276)" text-anchor="middle">H 600</text>
+          </g>
+          <!-- Vertical dim on blocks -->
+          <g>
+            <line x1="205" y1="218" x2="130" y2="180" class="dim-line"/>
+            <line x1="205" y1="308" x2="130" y2="270" class="dim-line"/>
+            <line x1="130" y1="180" x2="130" y2="270" class="dim-line"/>
+            <line x1="126" y1="180" x2="134" y2="180" class="dim-tick"/>
+            <line x1="126" y1="270" x2="134" y2="270" class="dim-tick"/>
+            <text x="118" y="228" text-anchor="end" class="dim-text" transform="rotate(-90 118 228)">H. 300</text>
+          </g>
+          <!-- Crosshair registration marks -->
+          <g stroke="rgba(212,175,55,.5)" stroke-width=".7">
+            <line x1="260" y1="150" x2="260" y2="162"/><line x1="254" y1="156" x2="266" y2="156"/>
+            <line x1="90" y1="239" x2="90" y2="251"/><line x1="84" y1="245" x2="96" y2="245"/>
+            <line x1="430" y1="239" x2="430" y2="251"/><line x1="424" y1="245" x2="436" y2="245"/>
+          </g>
+          <text x="60" y="60" class="tech-text">DWG A-101 — PLATEAU ASSEMBLAGE</text>
+          <text x="60" y="72" class="mono-sm">MAGNET: ON · FORCE 12N · OK</text>
+        </svg>
+      </div>
+
+      <!-- ========== SCENE 2 : LIDAR SCAN ========== -->
+      <div class="svg-scene" id="vis2">
+        <svg viewBox="0 0 520 460">
+          <defs>
+            <radialGradient id="gLaser" cx=".5" cy=".5" r=".5">
+              <stop offset="0" stop-color="rgba(0,180,216,.9)"/>
+              <stop offset="1" stop-color="rgba(0,180,216,0)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Scanner pillars -->
+          <rect x="96" y="60" width="7" height="300" fill="#22252a" stroke="#3e424b" stroke-width=".8"/>
+          <rect x="417" y="60" width="7" height="300" fill="#22252a" stroke="#3e424b" stroke-width=".8"/>
+          <rect x="90" y="54" width="340" height="8" fill="#181a1e" stroke="#2c2f36"/>
+          <text x="100" y="48" class="tech-text">SCANNER-AXIS // TWIN-LASER 635NM</text>
+
+          <!-- Platform + structure (point cloud style) -->
+          <polygon points="260,330 420,250 260,170 100,250" fill="rgba(18,19,24,.6)" stroke="rgba(0,180,216,.4)" stroke-width="1"/>
+
+          <!-- Structure edges as wireframe -->
+          <g stroke="rgba(0,180,216,.55)" stroke-width=".9" fill="rgba(41,82,112,.14)">
+            <polygon points="205,262 250,240 205,218 160,240"/>
+            <polygon points="160,240 205,262 205,308 160,286"/>
+            <polygon points="250,240 205,262 205,308 250,286"/>
+            <polygon points="290,278 322,262 290,246 258,262"/>
+            <polygon points="258,262 290,278 290,312 258,296"/>
+            <polygon points="322,262 290,278 290,312 322,296"/>
+            <polygon points="262,182 296,165 262,148 228,165"/>
+            <polygon points="228,165 262,182 262,222 228,205"/>
+            <polygon points="296,165 262,182 262,222 296,205"/>
+          </g>
+
+          <!-- LiDAR point cloud -->
+          <g fill="#67e8f9">
+            <!-- generated pattern of dots on faces -->
+            <circle class="lidar-dot" cx="170" cy="238" r="1.3"/><circle class="lidar-dot" cx="185" cy="245" r="1.3" style="animation-delay:.15s"/>
+            <circle class="lidar-dot" cx="200" cy="252" r="1.3" style="animation-delay:.3s"/><circle class="lidar-dot" cx="215" cy="246" r="1.3" style="animation-delay:.45s"/>
+            <circle class="lidar-dot" cx="230" cy="238" r="1.3" style="animation-delay:.6s"/><circle class="lidar-dot" cx="196" cy="232" r="1.3" style="animation-delay:.2s"/>
+            <circle class="lidar-dot" cx="183" cy="225" r="1.3" style="animation-delay:.35s"/><circle class="lidar-dot" cx="210" cy="226" r="1.3" style="animation-delay:.5s"/>
+            <circle class="lidar-dot" cx="240" cy="228" r="1.3" style="animation-delay:.65s"/><circle class="lidar-dot" cx="255" cy="236" r="1.3" style="animation-delay:.8s"/>
+            <circle class="lidar-dot" cx="166" cy="252" r="1.3" style="animation-delay:.25s"/><circle class="lidar-dot" cx="180" cy="266" r="1.3" style="animation-delay:.4s"/>
+            <circle class="lidar-dot" cx="196" cy="274" r="1.3" style="animation-delay:.55s"/><circle class="lidar-dot" cx="212" cy="282" r="1.3" style="animation-delay:.7s"/>
+            <circle class="lidar-dot" cx="248" cy="252" r="1.3" style="animation-delay:.85s"/><circle class="lidar-dot" cx="248" cy="270" r="1.3" style="animation-delay:1s"/>
+            <circle class="lidar-dot" cx="248" cy="288" r="1.3" style="animation-delay:1.15s"/><circle class="lidar-dot" cx="268" cy="256" r="1.3" style="animation-delay:.3s"/>
+            <circle class="lidar-dot" cx="282" cy="264" r="1.3" style="animation-delay:.45s"/><circle class="lidar-dot" cx="298" cy="272" r="1.3" style="animation-delay:.6s"/>
+            <circle class="lidar-dot" cx="312" cy="266" r="1.3" style="animation-delay:.75s"/><circle class="lidar-dot" cx="290" cy="252" r="1.3" style="animation-delay:.9s"/>
+            <circle class="lidar-dot" cx="276" cy="246" r="1.3" style="animation-delay:1.05s"/><circle class="lidar-dot" cx="264" cy="256" r="1.3" style="animation-delay:1.2s"/>
+            <circle class="lidar-dot" cx="264" cy="272" r="1.3" style="animation-delay:1.35s"/><circle class="lidar-dot" cx="264" cy="288" r="1.3" style="animation-delay:1.5s"/>
+            <circle class="lidar-dot" cx="312" cy="284" r="1.3" style="animation-delay:1.05s"/><circle class="lidar-dot" cx="312" cy="300" r="1.3" style="animation-delay:1.2s"/>
+            <circle class="lidar-dot" cx="234" cy="172" r="1.3" style="animation-delay:.4s"/><circle class="lidar-dot" cx="248" cy="178" r="1.3" style="animation-delay:.55s"/>
+            <circle class="lidar-dot" cx="262" cy="186" r="1.3" style="animation-delay:.7s"/><circle class="lidar-dot" cx="278" cy="178" r="1.3" style="animation-delay:.85s"/>
+            <circle class="lidar-dot" cx="292" cy="170" r="1.3" style="animation-delay:1s"/><circle class="lidar-dot" cx="252" cy="164" r="1.3" style="animation-delay:.5s"/>
+            <circle class="lidar-dot" cx="268" cy="158" r="1.3" style="animation-delay:.65s"/><circle class="lidar-dot" cx="236" cy="192" r="1.3" style="animation-delay:.8s"/>
+            <circle class="lidar-dot" cx="236" cy="204" r="1.3" style="animation-delay:.95s"/><circle class="lidar-dot" cx="286" cy="192" r="1.3" style="animation-delay:1.1s"/>
+            <circle class="lidar-dot" cx="286" cy="206" r="1.3" style="animation-delay:1.25s"/><circle class="lidar-dot" cx="258" cy="196" r="1.3" style="animation-delay:1s"/>
+          </g>
+
+          <!-- Twin laser beams (vertical sweep) -->
+          <g class="anim-scanline">
+            <polygon points="110,150 420,150 420,156 110,156" fill="rgba(0,180,216,.12)"/>
+            <line x1="110" y1="153" x2="420" y2="153" stroke="#00b4d8" stroke-width="1.6"/>
+            <ellipse cx="110" cy="153" rx="7" ry="12" fill="url(#gLaser)"/>
+            <ellipse cx="420" cy="153" rx="7" ry="12" fill="url(#gLaser)"/>
+          </g>
+
+          <!-- Scan metadata -->
+          <text x="110" y="388" class="tech-text">PASS 07/16 — RÉSOLUTION 0.1MM</text>
+          <text x="110" y="400" class="mono-sm" fill="#00b4d8">PTS: <tspan id="ptCount">2 412 884</tspan> · ΔZ ±0.03</text>
+          <!-- vertical gauge -->
+          <g>
+            <line x1="448" y1="80" x2="448" y2="360" stroke="var(--line-tech)"/>
+            <rect x="444" y="80" width="8" height="280" fill="none" stroke="#3e424b" stroke-width=".8"/>
+            <g class="anim-scanline"><rect x="444" y="149" width="8" height="5" fill="#00b4d8"/></g>
+            <text x="458" y="86" class="mono-sm">+Z</text>
+            <text x="458" y="364" class="mono-sm">0</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- ========== SCENE 3 : CAD MATRIX / IA ========== -->
+      <div class="svg-scene" id="vis3">
+        <svg viewBox="0 0 520 460">
+          <!-- Data inflow -->
+          <path d="M 40 60 Q 160 60 210 140" fill="none" stroke="#00b4d8" stroke-width="1.4" class="flow-line" opacity=".8"/>
+          <path d="M 60 40 Q 180 40 225 130" fill="none" stroke="#295270" stroke-width="1.2" class="flow-line" style="animation-delay:.4s"/>
+          <text x="30" y="30" class="tech-text">IN: CLOUD-POINT.STL</text>
+
+          <!-- CAD viewport frame -->
+          <rect x="150" y="90" width="240" height="240" fill="rgba(41,82,112,.06)" stroke="#3e424b" stroke-width="1"/>
+          <line x1="150" y1="210" x2="390" y2="210" stroke="rgba(160,165,177,.15)" stroke-dasharray="2 4"/>
+          <line x1="270" y1="90" x2="270" y2="330" stroke="rgba(160,165,177,.15)" stroke-dasharray="2 4"/>
+          <!-- viewport ticks -->
+          <g stroke="#3e424b" stroke-width=".7">
+            <line x1="200" y1="90" x2="200" y2="96"/><line x1="340" y1="90" x2="340" y2="96"/>
+            <line x1="200" y1="330" x2="200" y2="324"/><line x1="340" y1="330" x2="340" y2="324"/>
+          </g>
+          <text x="150" y="82" class="tech-text">VIEWPORT — ISO 30° · ORTHO</text>
+          <text x="368" y="345" class="mono-sm">Ø OK</text>
+
+          <!-- Wireframe build -->
+          <g class="anim-build">
+            <g stroke="#5aa7d1" stroke-width="1" fill="rgba(41,82,112,.18)">
+              <polygon points="270,290 340,255 270,220 200,255"/>
+              <polygon points="200,255 270,290 270,330 200,295"/>
+              <polygon points="340,255 270,290 270,330 340,295"/>
+              <polygon points="272,178 308,160 272,142 236,160"/>
+              <polygon points="236,160 272,178 272,220 236,202"/>
+              <polygon points="308,160 272,178 272,220 308,202"/>
+            </g>
+            <!-- Constraint lines -->
+            <g stroke="rgba(212,175,55,.65)" stroke-width=".7" stroke-dasharray="5 3" fill="none">
+              <line x1="270" y1="290" x2="270" y2="120"/>
+              <line x1="200" y1="255" x2="140" y2="225"/>
+              <line x1="340" y1="255" x2="400" y2="225"/>
+            </g>
+            <g fill="#d4af37">
+              <circle cx="270" cy="290" r="2"/><circle cx="200" cy="255" r="2"/><circle cx="340" cy="255" r="2"/>
+              <circle cx="270" cy="330" r="2"/>
+            </g>
+            <text x="276" y="126" class="dim-text">AXE_A</text>
+            <text x="136" y="220" text-anchor="end" class="dim-text">FIX</text>
+            <text x="404" y="220" class="dim-text">FIX</text>
+          </g>
+
+          <!-- CPU / IA node -->
+          <g transform="translate(60,300)">
+            <rect x="0" y="0" width="64" height="64" fill="#121318" stroke="#3e424b" stroke-width="1"/>
+            <rect x="8" y="8" width="48" height="48" fill="none" stroke="#295270" stroke-width=".8"/>
+            <g class="anim-cpu" stroke="#00b4d8" stroke-width="1" fill="none">
+              <rect x="20" y="20" width="24" height="24"/>
+              <line x1="32" y1="20" x2="32" y2="8"/><line x1="32" y1="44" x2="32" y2="56"/>
+              <line x1="20" y1="32" x2="8" y2="32"/><line x1="44" y1="32" x2="56" y2="32"/>
+            </g>
+            <text x="32" y="80" text-anchor="middle" class="tech-text" fill="#00b4d8">CORE_IA</text>
+            <!-- link to viewport -->
+            <line x1="64" y1="32" x2="150" y2="200" stroke="rgba(0,180,216,.4)" stroke-width="1" class="flow-line"/>
+          </g>
+
+          <!-- Scrolling metadata column -->
+          <g transform="translate(410,90)">
+            <rect x="-6" y="-14" width="104" height="268" fill="rgba(13,14,17,.7)" stroke="var(--line-tech)" stroke-width=".8"/>
+            <clipPath id="metaClip"><rect x="-2" y="-6" width="96" height="250"/></clipPath>
+            <g clip-path="url(#metaClip)">
+              <g class="meta-col">
+                <g id="metaSet">
+                  <text x="0" y="0" class="mono-sm">MESH: 48 212 TRI</text>
+                  <text x="0" y="14" class="mono-sm">VOL: 412.6 M³</text>
+                  <text x="0" y="28" class="mono-sm" fill="#00b4d8">BIM: IFC4 EXPORT</text>
+                  <text x="0" y="42" class="mono-sm">NODES: 12 884</text>
+                  <text x="0" y="56" class="mono-sm">STRESS: 0.82 OK</text>
+                  <text x="0" y="70" class="mono-sm" fill="#d4af37">GAN: LATENT 512</text>
+                  <text x="0" y="84" class="mono-sm">UV: AUTO-UNWRAP</text>
+                  <text x="0" y="98" class="mono-sm">NORM: RECALC ✓</text>
+                  <text x="0" y="112" class="mono-sm">MAT: PBR/2K</text>
+                  <text x="0" y="126" class="mono-sm" fill="#00b4d8">PIPE: MESH→BIM→GAN</text>
+                  <text x="0" y="140" class="mono-sm">LOSS: 0.0031 ↓</text>
+                  <text x="0" y="154" class="mono-sm">EPOCH: 240/240</text>
+                </g>
+                <use href="#metaSet" y="154"/>
+              </g>
+            </g>
+            <text x="-2" y="-22" class="tech-text">LOG_STREAM //</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- ========== SCENE 4 : VILLA LIVRÉE ========== -->
+      <div class="svg-scene" id="vis4">
+        <svg viewBox="0 0 560 480">
+          <defs>
+            <linearGradient id="gPool" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#22d3ee"/><stop offset=".55" stop-color="#0e7490"/><stop offset="1" stop-color="#155e75"/>
+            </linearGradient>
+            <linearGradient id="gFacade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#d6d3cd"/><stop offset="1" stop-color="#a8a49c"/>
+            </linearGradient>
+            <linearGradient id="gWoodClad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#7a5c36"/><stop offset="1" stop-color="#4f3a20"/>
+            </linearGradient>
+            <linearGradient id="gGlass4" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(150,200,235,.55)"/><stop offset=".5" stop-color="rgba(90,140,180,.35)"/><stop offset="1" stop-color="rgba(40,70,100,.5)"/>
+            </linearGradient>
+            <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="rgba(41,82,112,.28)"/><stop offset="1" stop-color="rgba(13,14,17,0)"/>
+            </linearGradient>
+          </defs>
+
+          <g class="anim-house4">
+            <!-- Sky glow backdrop -->
+            <rect x="60" y="30" width="440" height="180" fill="url(#gSky)"/>
+
+            <!-- Terrain / lawn -->
+            <polygon points="280,350 470,255 280,160 90,255" fill="#16351f" stroke="#1f4a2c" stroke-width="1"/>
+            <polygon points="90,255 280,350 280,364 90,269" fill="#0e2416"/>
+            <polygon points="470,255 280,350 280,364 470,269" fill="#0a1c11"/>
+
+            <!-- Stone paving path -->
+            <g>
+              <polygon points="150,268 210,238 232,249 172,279" fill="#3e424b" stroke="#2c2f36" stroke-width=".8"/>
+              <polygon points="172,279 232,249 232,257 172,287" fill="#2c2f36"/>
+              <line x1="168" y1="264" x2="216" y2="241" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+              <line x1="182" y1="270" x2="226" y2="249" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+            </g>
+
+            <!-- INFINITY POOL -->
+            <g>
+              <polygon points="352,318 448,270 380,236 284,284" fill="#082f3a"/>
+              <polygon points="350,314 444,268 378,236 286,282" fill="url(#gPool)" class="anim-water"/>
+              <!-- caustics -->
+              <g class="anim-reflect" stroke="rgba(255,255,255,.35)" stroke-width="1" fill="none">
+                <path d="M 310 282 Q 340 296 372 282"/>
+                <path d="M 330 294 Q 362 308 396 292"/>
+              </g>
+              <!-- overflow edge highlight -->
+              <line x1="286" y1="282" x2="444" y2="268" stroke="rgba(180,240,255,.7)" stroke-width="1.4"/>
+              <text x="360" y="298" text-anchor="middle" class="mono-sm" fill="rgba(220,250,255,.7)">POOL ∞</text>
+            </g>
+
+            <!-- VILLA — cantilever volume -->
+            <g>
+              <!-- shadow on lawn -->
+              <polygon points="160,258 290,322 396,272 300,222" fill="rgba(0,0,0,.38)"/>
+
+              <!-- Ground floor : stone façade -->
+              <polygon points="160,222 280,282 280,222 160,162" fill="url(#gFacade)" stroke="#8a867e" stroke-width=".8"/>
+              <polygon points="280,282 376,234 376,174 280,222" fill="#c2beb6" stroke="#9a968e" stroke-width=".8"/>
+              <!-- stone joint lines -->
+              <g stroke="rgba(0,0,0,.15)" stroke-width=".7">
+                <line x1="176" y1="186" x2="176" y2="246"/><line x1="196" y1="196" x2="196" y2="256"/>
+                <line x1="216" y1="206" x2="216" y2="266"/><line x1="236" y1="216" x2="236" y2="276"/>
+                <line x1="256" y1="226" x2="256" y2="286"/><line x1="268" y1="174" x2="168" y2="124"/>
+              </g>
+
+              <!-- Ground roof slab (supports cantilever) -->
+              <polygon points="280,222 376,174 240,106 144,154" fill="#2c2f36" stroke="#3e424b" stroke-width="1"/>
+              <polygon points="144,154 280,222 280,214 144,146" fill="#22252a"/>
+
+              <!-- UPPER FLOOR — cantilevered wood volume -->
+              <g transform="translate(40,-30)">
+                <!-- shadow face (left/underside) -->
+                <polygon points="120,230 240,290 240,250 120,190" fill="#33261a"/>
+                <!-- wood cladding face -->
+                <polygon points="240,290 336,242 336,202 240,250" fill="url(#gWoodClad)" stroke="#5c4527" stroke-width=".8"/>
+                <!-- vertical battens -->
+                <g stroke="rgba(0,0,0,.3)" stroke-width="1.1">
+                  <line x1="256" y1="282" x2="256" y2="244"/><line x1="272" y1="274" x2="272" y2="236"/>
+                  <line x1="288" y1="266" x2="288" y2="228"/><line x1="304" y1="258" x2="304" y2="220"/>
+                  <line x1="320" y1="250" x2="320" y2="212"/>
+                </g>
+                <!-- glazing band with interior visible -->
+                <polygon points="120,190 240,250 240,206 120,146" fill="url(#gGlass4)" stroke="#7fa8c9" stroke-width="1"/>
+                <!-- interior warm glow -->
+                <polygon points="132,182 228,230 228,200 132,152" fill="rgba(255,196,110,.35)"/>
+                <g stroke="rgba(255,255,255,.45)" stroke-width="1">
+                  <line x1="150" y1="158" x2="150" y2="196"/><line x1="180" y1="172" x2="180" y2="212"/>
+                  <line x1="210" y1="186" x2="210" y2="228"/>
+                </g>
+                <!-- glass reflection streak -->
+                <polygon class="anim-reflect" points="140,176 168,190 168,160 140,146" fill="rgba(255,255,255,.28)"/>
+                <!-- roof slab -->
+                <polygon points="120,146 240,206 336,158 216,98" fill="#1a1c20" stroke="#2c2f36" stroke-width="1"/>
+                <!-- cantilever dimension -->
+                <line x1="216" y1="98" x2="120" y2="60" class="dim-line" stroke-dasharray="3 3"/>
+                <text x="150" y="52" class="dim-text">PORTE-À-FAUX 4.2 M</text>
+              </g>
+
+              <!-- Door -->
+              <polygon points="180,238 204,250 204,204 180,192" fill="#2c2418" stroke="#1a1510" stroke-width=".8"/>
+              <line x1="192" y1="196" x2="192" y2="244" stroke="rgba(212,175,55,.6)" stroke-width="1"/>
+            </g>
+
+            <!-- Landscape : minimalist trees -->
+            <g>
+              <polygon points="128,246 140,238 128,206 116,238" fill="#1d5c33"/>
+              <polygon points="140,238 128,246 128,254 140,246" fill="#14421f"/>
+              <rect x="126" y="252" width="4" height="10" fill="#3a2c18"/>
+              <polygon points="420,252 432,244 420,212 408,244" fill="#1d5c33"/>
+              <polygon points="432,244 420,252 420,260 432,252" fill="#14421f"/>
+              <rect x="418" y="258" width="4" height="10" fill="#3a2c18"/>
+              <!-- shrubs -->
+              <ellipse cx="330" cy="330" rx="14" ry="7" fill="#1a4a2a"/>
+              <ellipse cx="120" cy="282" rx="11" ry="6" fill="#1a4a2a"/>
+            </g>
+
+            <!-- Architectural ground lighting -->
+            <g fill="#ffd98a">
+              <circle class="anim-glight" cx="238" cy="296" r="2.4"/>
+              <circle class="anim-glight" cx="286" cy="320" r="2.4" style="animation-delay:1.2s"/>
+              <circle class="anim-glight" cx="188" cy="272" r="2.4" style="animation-delay:2.4s"/>
+              <circle class="anim-glight" cx="400" cy="300" r="2.4" style="animation-delay:.6s"/>
+            </g>
+            <g fill="rgba(255,217,138,.14)">
+              <circle class="anim-glight" cx="238" cy="296" r="7"/>
+              <circle class="anim-glight" cx="286" cy="320" r="7" style="animation-delay:1.2s"/>
+              <circle class="anim-glight" cx="188" cy="272" r="7" style="animation-delay:2.4s"/>
+              <circle class="anim-glight" cx="400" cy="300" r="7" style="animation-delay:.6s"/>
+            </g>
+          </g>
+
+          <!-- Title block -->
+          <g>
+            <rect x="60" y="404" width="280" height="52" fill="rgba(13,14,17,.85)" stroke="var(--line-tech)" stroke-width=".8"/>
+            <line x1="60" y1="421" x2="340" y2="421" stroke="var(--line-tech)"/>
+            <text x="68" y="416" class="tech-text" fill="#c09a58">PROJET VILLA — LIVRAISON FINAL</text>
+            <text x="68" y="434" class="mono-sm">REV 2026.10 · ÉCH. 1:100 · PBR 4K</text>
+            <text x="68" y="448" class="mono-sm" fill="#00b4d8">STATUS: DCE PRÊT ✓ · SIGNÉ: A.CHT</text>
+          </g>
+          <text x="470" y="440" text-anchor="end" class="mono-sm">N 45.7589 · E 4.8352</text>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="f-left">ARTCHITECH © 2026 — <b>PHYSICAL → BIM → REALITY</b></div>
+  <div class="f-right">BUILD 2026.10.08 · REV A · DOCUMENT APPROUVÉ POUR CONSTRUCTION</div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const steps    = document.querySelectorAll('.step-section');
+  const visuals  = document.querySelectorAll('.svg-scene');
+  const nodes    = document.querySelectorAll('.progress-node');
+  const progFill = document.getElementById('progFill');
+  const hudTL    = document.getElementById('hudTL');
+  const hudBR    = document.getElementById('hudBR');
+  const stage    = document.getElementById('stage');
+  const cross    = document.getElementById('crosshair');
+  const chCoord  = document.getElementById('chCoord');
+
+  const HUD = [
+    { view:'VIEW_01', label:'ASSEMBLAGE',  coord:'45.7589, 4.8352', status:'OK' },
+    { view:'VIEW_02', label:'SCAN LiDAR',  coord:'45.7589, 4.8352', status:'TRACKING' },
+    { view:'VIEW_03', label:'CAO / IA',    coord:'45.7589, 4.8352', status:'IA_READY' },
+    { view:'VIEW_04', label:'LIVRAISON',   coord:'45.7589, 4.8352', status:'SIGNÉ ✓' }
+  ];
+
+  let activeStep = 1;
+
+  function setScene(n){
+    if (n === activeStep) return;
+    activeStep = n;
+    visuals.forEach(v => v.classList.remove('active'));
+    const vis = document.getElementById('vis' + n);
+    if (vis) vis.classList.add('active');
+    nodes.forEach((node, i) => node.classList.toggle('lit', i < n));
+    progFill.style.height = (n / 4 * 100) + '%';
+    const h = HUD[n - 1];
+    hudTL.innerHTML = `<b>${h.view}</b> // ${h.label} · <span class="live">${h.status}</span>`;
+    hudBR.innerHTML = `COORD: ${h.coord}<br><b>STATUS:</b> ${h.status}`;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) setScene(parseInt(e.target.id.replace('step',''), 10));
+    });
+  }, { root: null, rootMargin: '-42% 0px -42% 0px', threshold: 0 });
+
+  steps.forEach(s => observer.observe(s));
+  nodes[0].classList.add('lit');
+  progFill.style.height = '25%';
+
+  /* ---- Crosshair cursor ---- */
+  stage.addEventListener('pointerenter', () => stage.classList.add('hovering'));
+  stage.addEventListener('pointerleave', () => stage.classList.remove('hovering'));
+  stage.addEventListener('pointermove', (e) => {
+    const r = stage.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    cross.style.transform = `translate(${x}px, ${y}px)`;
+    const pad = (v) => String(Math.round(v)).padStart(4, '0');
+    chCoord.textContent = `X ${pad(x)} · Y ${pad(y)}`;
+  });
+
+  /* ---- Animated point counter (scene 2) ---- */
+  let pts = 2412884;
+  setInterval(() => {
+    pts += Math.floor(Math.random() * 900 + 120);
+    const el = document.getElementById('ptCount');
+    if (el) el.textContent = pts.toLocaleString('fr-FR').replace(/,/g, ' ');
+  }, 600);
+});
+</script>
 </body>
 </html>
