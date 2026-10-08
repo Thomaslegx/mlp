@@ -3,160 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArtChitech | Projet Révolutionnaire</title>
+    <title>ArtChitech | IA & Modelage Architectural</title>
+    
+    <!-- Importation de la police Google (Inter) pour un look moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
-        
-        body, html { 
-            margin: 0; padding: 0; font-family: 'Space Grotesk', sans-serif; 
-            background: #050505; color: #fff; overflow-x: hidden; scroll-behavior: smooth; 
-        }
-        
-        /* CSS Animations (Remplacent les images) */
-        
-        /* Vis 1 : Blocs 3D animés */
-        .scene { width: 120px; height: 120px; perspective: 800px; margin: auto; }
-        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: spin 8s infinite linear; }
-        .face { position: absolute; width: 120px; height: 120px; border: 2px solid #ffffff33; display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.2); backdrop-filter: blur(5px); }
-        .front  { transform: rotateY(  0deg) translateZ(60px); }
-        .back   { transform: rotateY(180deg) translateZ(60px); }
-        .right  { transform: rotateY( 90deg) translateZ(60px); }
-        .left   { transform: rotateY(-90deg) translateZ(60px); }
-        .top    { transform: rotateX( 90deg) translateZ(60px); }
-        .bottom { transform: rotateX(-90deg) translateZ(60px); }
-        
-        /* Vis 2 : Scanner Laser */
-        .scan-container { position: relative; width: 150px; height: 150px; margin: auto; perspective: 600px; }
-        .wireframe { width: 100%; height: 100%; border: 2px dashed #10b981; border-radius: 10px; animation: spin 10s infinite linear reverse; }
-        .laser { position: absolute; top: 0; left: -20%; width: 140%; height: 3px; background: #10b981; box-shadow: 0 0 20px #10b981, 0 0 40px #10b981; animation: scanMove 2.5s infinite ease-in-out alternate; z-index: 10; }
-        
-        /* Vis 3 : UI Paramétrage */
-        .ui-panel { width: 220px; background: #111; border: 1px solid #333; padding: 30px 20px; border-radius: 15px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .ui-bar { height: 6px; background: #222; border-radius: 4px; margin-bottom: 25px; position: relative; }
-        .ui-knob { position: absolute; top: -5px; width: 16px; height: 16px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 15px #3b82f6; }
-        .knob1 { animation: slide1 2s infinite alternate ease-in-out; }
-        .knob2 { animation: slide2 3s infinite alternate ease-in-out; }
-        .knob3 { animation: slide3 2.5s infinite alternate ease-in-out; }
-        
-        /* Vis 4 : Génération IA (Morphing & Glow) */
-        .ia-render { 
-            width: 180px; height: 180px; margin: auto; 
-            background: linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6); 
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; 
-            animation: morph 5s infinite alternate ease-in-out, glowSuper 3s infinite alternate; 
+        /* ==========================================================================
+           1. RESET & VARIABLES GLOBALES
+           ========================================================================== */
+        :root {
+            --bg-main: #050505;
+            --bg-secondary: #0a0a0a;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --accent-blue: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* Keyframes */
-        @keyframes spin { to { transform: rotateX(360deg) rotateY(360deg); } }
-        @keyframes scanMove { 0% { top: -10px; } 100% { top: 160px; } }
-        @keyframes slide1 { from { left: 0%; } to { left: 80%; } }
-        @keyframes slide2 { from { left: 20%; } to { left: 100%; } }
-        @keyframes slide3 { from { left: 60%; } to { left: 10%; } }
-        @keyframes morph { 
-            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; } 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* ==========================================================================
+           2. EN-TÊTE (HEADER)
+           ========================================================================== */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Logo animé en CSS */
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            border-radius: 4px;
+            transform: rotate(45deg);
+            animation: pulseLogo 3s infinite alternate;
+        }
+
+        .team-badge {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* ==========================================================================
+           3. SECTION HÉRO (ACCUEIL)
+           ========================================================================== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, #151515 0%, var(--bg-main) 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 5vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #ffffff, #71717a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            max-width: 900px;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 50px;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            animation: bounce 2s infinite ease-in-out;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================================================
+           4. SECTION SCROLL ANIMÉ (LE CŒUR DU SITE)
+           ========================================================================== */
+        #scroll-section {
+            height: 400vh; /* Permet de scroller longuement pour voir les 4 étapes */
+            position: relative;
+        }
+
+        .sticky-container {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- Textes de gauche --- */
+        .steps-text {
+            flex: 1;
+            padding-left: 10%;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-text {
+            position: absolute;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 450px;
+            pointer-events: none;
+        }
+
+        .step-text.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .step-text h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .step-text span.step-number {
+            display: block;
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .step-text p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* --- Visuels de droite --- */
+        .steps-visuals {
+            flex: 1.2;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-visual {
+            position: absolute;
+            width: 70%;
+            height: 60%;
+            border-radius: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .step-visual.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* ==========================================================================
+           5. ANIMATIONS CSS DES VISUELS (SANS IMAGES)
+           ========================================================================== */
+
+        /* Étape 1 : Le cube 3D (Assemblage) */
+        .cube-scene {
+            width: 150px; height: 150px;
+            perspective: 1000px;
+        }
+        .cube-wrapper {
+            width: 100%; height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spinCube 12s infinite linear;
+        }
+        .cube-face {
+            position: absolute;
+            width: 150px; height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cube-face::after {
+            content: ''; width: 50%; height: 50%;
+            background: var(--accent-blue); opacity: 0.5; border-radius: 4px;
+        }
+        .front  { transform: rotateY(  0deg) translateZ(75px); }
+        .back   { transform: rotateY(180deg) translateZ(75px); }
+        .right  { transform: rotateY( 90deg) translateZ(75px); }
+        .left   { transform: rotateY(-90deg) translateZ(75px); }
+        .top    { transform: rotateX( 90deg) translateZ(75px); }
+        .bottom { transform: rotateX(-90deg) translateZ(75px); }
+
+        /* Étape 2 : Le Scanner Laser */
+        .scanner-scene {
+            width: 200px; height: 200px;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            transform: perspective(500px) rotateX(45deg) rotateZ(45deg);
+        }
+        .laser-beam {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: #10b981;
+            box-shadow: 0 0 20px #10b981, 0 0 40px #10b981;
+            animation: scanVertical 2s infinite ease-in-out alternate;
+        }
+
+        /* Étape 3 : Interface Paramétrage */
+        .ui-scene {
+            width: 260px;
+            background: #111;
+            border-radius: 16px;
+            padding: 30px 20px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .ui-row {
+            height: 8px; background: #222; border-radius: 4px; margin-bottom: 30px; position: relative;
+        }
+        .ui-slider {
+            position: absolute; top: -6px; width: 20px; height: 20px;
+            background: #fff; border-radius: 50%; box-shadow: 0 0 10px var(--accent-blue);
+        }
+        .slider-1 { animation: slideAnim1 3s infinite alternate ease-in-out; }
+        .slider-2 { animation: slideAnim2 2.5s infinite alternate ease-in-out; }
+        .slider-3 { animation: slideAnim3 4s infinite alternate ease-in-out; }
+
+        /* Étape 4 : L'IA Générative (Orbe morphing) */
+        .ia-scene {
+            width: 200px; height: 200px;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: morphShape 6s infinite alternate ease-in-out, pulseGlow 3s infinite alternate;
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ==========================================================================
+           6. KEYFRAMES D'ANIMATION
+           ========================================================================== */
+        @keyframes pulseLogo { 0% { box-shadow: 0 0 10px var(--accent-glow); } 100% { box-shadow: 0 0 20px var(--accent-glow); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+        @keyframes spinCube { 100% { transform: rotateX(360deg) rotateY(360deg); } }
+        @keyframes scanVertical { 0% { top: 0%; } 100% { top: 100%; } }
+        @keyframes slideAnim1 { 0% { left: 10%; } 100% { left: 80%; } }
+        @keyframes slideAnim2 { 0% { left: 50%; } 100% { left: 90%; } }
+        @keyframes slideAnim3 { 0% { left: 80%; } 100% { left: 20%; } }
+        @keyframes morphShape { 
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(0deg); } 
             100% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; transform: rotate(180deg) scale(1.1); } 
         }
-        @keyframes glowSuper { 
-            0% { box-shadow: 0 0 30px #ec4899; } 
-            50% { box-shadow: 0 0 60px #8b5cf6; } 
-            100% { box-shadow: 0 0 30px #3b82f6; } 
-        }
-        
-        /* Structure de la page */
-        header { position: fixed; top: 0; width: 100%; padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; z-index: 100; background: rgba(5,5,5,0.7); backdrop-filter: blur(10px); box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo { font-size: 1.8rem; font-weight: 700; letter-spacing: 2px; }
-        .logo span { color: #3b82f6; }
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; background: radial-gradient(circle at center, #111 0%, #000 100%); }
-        .hero h1 { font-size: 4.5rem; margin-bottom: 20px; background: linear-gradient(to right, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
-        .hero p { font-size: 1.3rem; color: #a3a3a3; max-width: 650px; line-height: 1.6; }
-        
-        #scroll-section { height: 400vh; position: relative; }
-        .sticky-container { position: sticky; top: 0; height: 100vh; display: flex; overflow: hidden; background: #050505; }
-        .steps-text { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 10%; position: relative; }
-        .step-text { position: absolute; opacity: 0; transform: translateY(40px); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); max-width: 450px; }
-        .step-text.active { opacity: 1; transform: translateY(0); z-index: 10; }
-        .step-text h2 { font-size: 3.5rem; color: #3b82f6; margin-bottom: 20px; }
-        .step-text p { font-size: 1.2rem; color: #a3a3a3; line-height: 1.7; }
-        
-        .steps-visuals { flex: 1.2; position: relative; display: flex; align-items: center; justify-content: center; }
-        .step-visual { position: absolute; width: 75%; height: 65%; border-radius: 20px; background: #0a0a0a; border: 1px solid #1a1a1a; opacity: 0; transform: scale(0.9); transition: all 0.8s ease; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
-        .step-visual.active { opacity: 1; transform: scale(1); }
-        
-        @media(max-width: 900px) {
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 40px #ec4899; } 100% { box-shadow: 0 0 80px #3b82f6; } }
+
+        /* ==========================================================================
+           7. RESPONSIVE DESIGN (Mobiles & Tablettes)
+           ========================================================================== */
+        @media (max-width: 968px) {
+            header { padding: 15px 20px; }
             .sticky-container { flex-direction: column; }
-            .steps-text { flex: 0.8; align-items: center; text-align: center; padding: 100px 20px 0 20px; }
-            .steps-visuals { flex: 1.2; }
+            .steps-text { flex: 0.8; padding: 120px 20px 0 20px; align-items: flex-start; }
+            .step-text { max-width: 100%; text-align: center; left: 20px; right: 20px; }
+            .steps-visuals { flex: 1.2; width: 100%; }
             .step-visual { width: 90%; height: 80%; }
-            .hero h1 { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Header / Navigation -->
     <header>
-        <div class="logo">ART<span>CHITECH</span></div>
-        <div style="color: #888; font-size: 0.95rem; border: 1px solid #333; padding: 5px 15px; border-radius: 20px;">Projet Terminale SI</div>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            ARTCHITECH
+        </div>
+        <div class="team-badge">Projet SI 26-27</div>
     </header>
 
+    <!-- Section d'introduction -->
     <section class="hero">
-        <h1>La conception réinventée.</h1>
-        <p>Une expérience phygitale interactive. Scrollez pour découvrir comment ArtChitech transforme instantanément vos blocs physiques en rendus architecturaux parfaits grâce à l'IA.</p>
-        <div style="margin-top: 60px; animation: bounce 2s infinite;">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        <h1>De la matière brute à la réalité.</h1>
+        <p>L'outil phygital qui permet de concevoir, scanner et générer des rendus architecturaux photoréalistes en quelques secondes grâce à l'IA.</p>
+        
+        <div class="scroll-indicator">
+            <!-- Icône flèche vers le bas -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
         </div>
     </section>
 
+    <!-- Section Interactive (Sticky Scroll) -->
     <section id="scroll-section">
         <div class="sticky-container">
+            
+            <!-- Les textes qui changent -->
             <div class="steps-text">
                 <div class="step-text active">
-                    <h2>01. Assemblage</h2>
-                    <p>Fini les écrans complexes. L'utilisateur construit librement sa maquette tangible avec des blocs sur notre plateau rotatif. C'est intuitif, physique et immédiat.</p>
+                    <span class="step-number">ÉTAPE 01</span>
+                    <h2>Assemblage Tangible</h2>
+                    <p>Fini les logiciels complexes dès le premier rendez-vous. Le client construit physiquement son idée avec des blocs plastiques colorés. C'est intuitif, ludique et immédiat.</p>
                 </div>
                 <div class="step-text">
-                    <h2>02. Scan 3D</h2>
-                    <p>Le plateau entre en rotation. Notre système optique vertical balaie la création pour numériser la géométrie et identifier chaque matériau via les codes couleurs.</p>
+                    <span class="step-number">ÉTAPE 02</span>
+                    <h2>Numérisation 3D</h2>
+                    <p>Placez la maquette sur le plateau. Le moteur rotatif et l'axe Y entrent en action : la caméra capture la géométrie et les couleurs pour créer un squelette 3D parfait.</p>
                 </div>
                 <div class="step-text">
-                    <h2>03. Paramétrage</h2>
-                    <p>Depuis la plateforme Web, l'architecte et le client ajustent ensemble les curseurs : lumière, style architectural, environnement. Le projet prend direction.</p>
+                    <span class="step-number">ÉTAPE 03</span>
+                    <h2>Paramétrage Web</h2>
+                    <p>Connectez-vous à l'interface ArtChitech. Définissez le style architectural, les matériaux exacts et l'environnement lumineux. Vous gardez le contrôle total.</p>
                 </div>
                 <div class="step-text">
-                    <h2>04. IA Générative</h2>
-                    <p>La magie opère. L'IA fusionne le squelette 3D scanné et vos paramètres pour générer en quelques secondes un rendu organique, photoréaliste et bluffant.</p>
+                    <span class="step-number">ÉTAPE 04</span>
+                    <h2>Génération IA</h2>
+                    <p>La magie opère en temps réel. Notre IA générative fusionne la structure scannée et vos paramètres pour livrer un rendu photoréaliste époustouflant.</p>
                 </div>
             </div>
 
-            <!-- Les animations pure CSS (Aucune image requise) -->
+            <!-- Les visuels animés en pur CSS -->
             <div class="steps-visuals">
+                
+                <!-- Visuel 1 : Cube 3D -->
                 <div class="step-visual active">
-                    <div class="scene">
-                        <div class="cube">
-                            <div class="face front"></div><div class="face back"></div>
-                            <div class="face right"></div><div class="face left"></div>
-                            <div class="face top"></div><div class="face bottom"></div>
+                    <div class="cube-scene">
+                        <div class="cube-wrapper">
+                            <div class="cube-face front"></div>
+                            <div class="cube-face back"></div>
+                            <div class="cube-face right"></div>
+                            <div class="cube-face left"></div>
+                            <div class="cube-face top"></div>
+                            <div class="cube-face bottom"></div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Visuel 2 : Scanner -->
                 <div class="step-visual">
-                    <div class="scan-container">
-                        <div class="wireframe"></div>
-                        <div class="laser"></div>
+                    <div class="scanner-scene">
+                        <div class="laser-beam"></div>
                     </div>
                 </div>
+
+                <!-- Visuel 3 : UI / Interface -->
                 <div class="step-visual">
-                    <div class="ui-panel">
-                        <div class="ui-bar"><div class="ui-knob knob1"></div></div>
-                        <div class="ui-bar"><div class="ui-knob knob2"></div></div>
-                        <div class="ui-bar"><div class="ui-knob knob3"></div></div>
+                    <div class="ui-scene">
+                        <div class="ui-row"><div class="ui-slider slider-1"></div></div>
+                        <div class="ui-row"><div class="ui-slider slider-2"></div></div>
+                        <div class="ui-row"><div class="ui-slider slider-3"></div></div>
                     </div>
                 </div>
+
+                <!-- Visuel 4 : IA Générative -->
                 <div class="step-visual">
-                    <div class="ia-render"></div>
+                    <div class="ia-scene"></div>
                 </div>
+
             </div>
         </div>
     </section>
 
+    <!-- Script pour l'animation au scroll -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const scrollSection = document.getElementById('scroll-section');
@@ -165,19 +435,30 @@
             const totalSteps = texts.length;
 
             window.addEventListener('scroll', () => {
+                // Calcul de la position de défilement
                 const rect = scrollSection.getBoundingClientRect();
                 const scrollableDistance = scrollSection.offsetHeight - window.innerHeight;
                 const scrolled = -rect.top;
                 
+                // Progression entre 0 et 1
                 let progress = scrolled / scrollableDistance;
                 if (progress < 0) progress = 0;
                 if (progress > 1) progress = 1;
 
+                // Index de l'étape active (0, 1, 2, ou 3)
                 let activeIndex = Math.floor(progress * totalSteps);
                 if (activeIndex >= totalSteps) activeIndex = totalSteps - 1; 
 
-                texts.forEach((text, index) => text.classList.toggle('active', index === activeIndex));
-                visuals.forEach((visual, index) => visual.classList.toggle('active', index === activeIndex));
+                // Mise à jour des classes CSS pour l'affichage
+                texts.forEach((text, index) => {
+                    if(index === activeIndex) text.classList.add('active');
+                    else text.classList.remove('active');
+                });
+                
+                visuals.forEach((visual, index) => {
+                    if(index === activeIndex) visual.classList.add('active');
+                    else visual.classList.remove('active');
+                });
             });
         });
     </script>
