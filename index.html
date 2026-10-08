@@ -8,10 +8,10 @@
 <style>
 /* ============================================================
    ARTCHITECH — BIM & ARCHITECTURAL CANVAS
-   Design System v2.0 / Lead Creative Technologist
+   Design System v2.1 / GPU-optimized build
    ============================================================ */
 :root{
-  --bg:#0d0e11;               /* béton ardoise */
+  --bg:#0d0e11;
   --bg-deep:#0a0b0e;
   --bg-card:#121318;
   --line-grid:rgba(255,255,255,.04);
@@ -27,6 +27,7 @@
   --text:#e8eaee;
   --text-muted:#7a808c;
   --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-soft:cubic-bezier(.4,0,.2,1);
   --mono:'JetBrains Mono',monospace;
   --sans:'Plus Jakarta Sans',sans-serif;
 }
@@ -41,14 +42,30 @@ body{
   color:var(--text);
   font-family:var(--sans);
   overflow-x:hidden;
-  cursor:default;
 }
 ::selection{background:var(--bronze);color:#0d0e11}
 
-/* Subtle vignette over grid for depth */
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(6,7,9,.55) 100%);
+}
+
+/* ============================================================
+   COUCHE GPU — force le compositeur sur tous les éléments animés
+   ============================================================ */
+.anim-block1,.anim-gantry,.anim-ghost,.anim-scanline,.scan-plane,
+.lidar-dot,.flow-line,.anim-build,.anim-cpu,.meta-col,
+.anim-water,.anim-reflect,.anim-house4,.anim-glight,
+.scroll-cue .bar::after,.seal::before,.hud .live::before{
+  will-change:transform,opacity;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform:translateZ(0);
+}
+.svg-scene{
+  will-change:transform,opacity;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
 }
 
 /* ============ HEADER ============ */
@@ -66,27 +83,17 @@ header::after{
 }
 .logo{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--text)}
 .logo img{height:38px;width:auto;object-fit:contain;filter:grayscale(15%) contrast(1.05)}
-.logo-text{
-  font-size:.95rem;font-weight:800;letter-spacing:4px;text-transform:uppercase;
-}
+.logo-text{font-size:.95rem;font-weight:800;letter-spacing:4px;text-transform:uppercase}
 .logo-text span{color:var(--bronze)}
-.logo-sub{
-  font-family:var(--mono);font-size:.55rem;letter-spacing:2px;
-  color:var(--text-muted);display:block;margin-top:2px;
-}
+.logo-sub{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;color:var(--text-muted);display:block;margin-top:2px}
 .seal{
-  font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;
-  color:var(--bronze-deep);
-  border:1px solid rgba(192,154,88,.45);
-  padding:8px 18px;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;color:var(--bronze-deep);
+  border:1px solid rgba(192,154,88,.45);padding:8px 18px;
   display:flex;align-items:center;gap:10px;
   background:linear-gradient(135deg,rgba(192,154,88,.08),transparent 60%);
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
 }
-.seal::before{
-  content:'';width:7px;height:7px;border:1px solid var(--bronze);
-  transform:rotate(45deg);flex-shrink:0;
-}
+.seal::before{content:'';width:7px;height:7px;border:1px solid var(--bronze);transform:rotate(45deg);flex-shrink:0}
 .seal b{color:var(--bronze);font-weight:400}
 
 /* ============ HERO ============ */
@@ -105,23 +112,14 @@ header::after{
   font-size:clamp(2.6rem,6vw,5.2rem);font-weight:800;letter-spacing:.5px;
   line-height:1.05;text-transform:uppercase;max-width:1100px;
 }
-.hero h1 em{
-  font-style:normal;color:transparent;
-  -webkit-text-stroke:1px var(--bronze);
-  display:block;
-}
-.hero-meta{
-  display:flex;gap:44px;margin-top:38px;flex-wrap:wrap;justify-content:center;
-}
+.hero h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1px var(--bronze);display:block}
+.hero-meta{display:flex;gap:44px;margin-top:38px;flex-wrap:wrap;justify-content:center}
 .hero-meta div{
   font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;color:var(--text-muted);
   display:flex;flex-direction:column;gap:5px;text-align:left;
 }
 .hero-meta div b{color:var(--aluminium);font-weight:400}
-.hero p.lede{
-  margin-top:36px;font-size:1.05rem;color:var(--text-muted);max-width:560px;
-  line-height:1.8;font-weight:300;
-}
+.hero p.lede{margin-top:36px;font-size:1.05rem;color:var(--text-muted);max-width:560px;line-height:1.8;font-weight:300}
 .scroll-cue{
   position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
   font-family:var(--mono);font-size:.55rem;letter-spacing:3px;color:var(--text-muted);
@@ -130,16 +128,13 @@ header::after{
 .scroll-cue .bar{width:1px;height:52px;background:var(--line-tech);position:relative;overflow:hidden}
 .scroll-cue .bar::after{
   content:'';position:absolute;top:-40%;left:0;width:100%;height:40%;
-  background:var(--bronze);animation:scrollFlow 2.2s var(--ease-out) infinite;
+  background:var(--bronze);animation:scrollFlow 2.6s var(--ease-soft) infinite;
 }
 @keyframes scrollFlow{0%{top:-40%}100%{top:110%}}
 
-/* ============ SCROLLYTELLING LAYOUT ============ */
+/* ============ SCROLLYTELLING ============ */
 .story-wrap{position:relative;z-index:1;max-width:1480px;margin:0 auto;display:flex}
-.cut-line{
-  position:absolute;left:calc(40% + 4%);top:0;bottom:0;width:1px;
-  background:var(--line-tech);
-}
+.cut-line{position:absolute;left:calc(40% + 4%);top:0;bottom:0;width:1px;background:var(--line-tech)}
 .cut-line .cut-label{
   position:absolute;top:18px;left:10px;
   font-family:var(--mono);font-size:.55rem;letter-spacing:2px;color:var(--text-muted);
@@ -148,44 +143,33 @@ header::after{
 .progress-node{
   position:absolute;left:50%;transform:translate(-50%,-50%);
   width:11px;height:11px;border:1px solid var(--text-muted);
-  background:var(--bg);transition:border-color .5s var(--ease-out),background .5s;
+  background:var(--bg);
+  transition:border-color .6s var(--ease-soft),background .6s var(--ease-soft);
 }
 .progress-node::after{
   content:attr(data-n);position:absolute;left:16px;top:50%;transform:translateY(-50%);
   font-family:var(--mono);font-size:.55rem;letter-spacing:1px;color:var(--text-muted);
-  transition:color .5s;
+  transition:color .6s;
 }
 .progress-node.lit{border-color:var(--bronze);background:var(--bronze)}
 .progress-node.lit::after{color:var(--bronze)}
 .progress-fill{
   position:absolute;left:0;top:0;width:100%;height:0%;
   background:linear-gradient(180deg,var(--bronze),var(--bronze-deep));
-  transition:height .8s var(--ease-out);
+  transition:height .9s var(--ease-out);
 }
 
 .text-column{width:40%;padding:0 6% 0 5%}
-.step-section{
-  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
-  padding:60px 0;position:relative;
-}
+.step-section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:60px 0;position:relative}
 .step-index{
   font-family:var(--mono);font-size:.6rem;letter-spacing:3px;color:var(--bronze-deep);
   display:flex;align-items:center;gap:12px;margin-bottom:22px;
 }
 .step-index::after{content:'';flex:0 0 40px;height:1px;background:rgba(192,154,88,.5)}
-.step-section h2{
-  font-size:clamp(1.7rem,2.6vw,2.6rem);font-weight:800;text-transform:uppercase;
-  letter-spacing:2px;line-height:1.15;margin-bottom:22px;
-}
+.step-section h2{font-size:clamp(1.7rem,2.6vw,2.6rem);font-weight:800;text-transform:uppercase;letter-spacing:2px;line-height:1.15;margin-bottom:22px}
 .step-section h2 span{color:transparent;-webkit-text-stroke:1px var(--bronze)}
-.step-section p{
-  font-size:1rem;color:var(--text-muted);line-height:1.9;font-weight:300;max-width:440px;
-}
-.step-specs{
-  margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:1px;
-  background:var(--line-tech);border:1px solid var(--line-tech);
-  max-width:440px;
-}
+.step-section p{font-size:1rem;color:var(--text-muted);line-height:1.9;font-weight:300;max-width:440px}
+.step-specs{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-tech);border:1px solid var(--line-tech);max-width:440px}
 .step-specs div{
   background:var(--bg-deep);padding:12px 14px;
   font-family:var(--mono);font-size:.58rem;letter-spacing:1px;color:var(--text-muted);
@@ -193,21 +177,17 @@ header::after{
 }
 .step-specs div b{color:var(--aluminium);font-weight:400;font-size:.62rem}
 
-/* ============ VISUAL STAGE (STICKY) ============ */
+/* ============ VISUAL STAGE ============ */
 .visual-column{
   width:60%;position:sticky;top:0;height:100vh;
   display:flex;align-items:center;justify-content:center;padding:84px 5% 40px 0;
 }
 .stage{position:relative;width:100%;height:min(76vh,700px)}
-
-/* Architectural frame */
 .stage-frame{
   position:absolute;inset:0;
   background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.015));
-  border:1px solid var(--line-tech);
-  pointer-events:none;z-index:30;
+  border:1px solid var(--line-tech);pointer-events:none;z-index:30;
 }
-/* Corner alignment marks */
 .corner{position:absolute;width:22px;height:22px;z-index:40;pointer-events:none}
 .corner::before,.corner::after{content:'';position:absolute;background:var(--bronze)}
 .corner::before{width:22px;height:1px}
@@ -216,8 +196,6 @@ header::after{
 .corner.tr{top:-1px;right:-1px}.corner.tr::before{top:0;right:0}.corner.tr::after{top:0;right:0}
 .corner.bl{bottom:-1px;left:-1px}.corner.bl::before{bottom:0;left:0}.corner.bl::after{bottom:0;left:0}
 .corner.br{bottom:-1px;right:-1px}.corner.br::before{bottom:0;right:0}.corner.br::after{bottom:0;right:0}
-
-/* Graduated rulers (fixed edges) */
 .ruler{position:absolute;z-index:35;pointer-events:none;opacity:.7}
 .ruler-x{top:-26px;left:22px;right:22px;height:16px;
   background:repeating-linear-gradient(90deg,var(--line-tech) 0 1px,transparent 1px 20px);
@@ -227,52 +205,50 @@ header::after{
   background:repeating-linear-gradient(180deg,var(--line-tech) 0 1px,transparent 1px 20px);
   border-right:1px solid var(--line-tech);
 }
-.ruler-label{
-  position:absolute;font-family:var(--mono);font-size:.5rem;letter-spacing:2px;color:var(--text-muted);
-}
+.ruler-label{position:absolute;font-family:var(--mono);font-size:.5rem;letter-spacing:2px;color:var(--text-muted)}
 .ruler-label.rt{top:-24px;right:24px}
 .ruler-label.rb{bottom:-24px;left:24px}
-
-/* HUD overlay inside frame */
 .hud{position:absolute;z-index:40;font-family:var(--mono);font-size:.52rem;letter-spacing:1.5px;color:var(--text-muted);pointer-events:none}
 .hud-tl{top:14px;left:16px}
 .hud-br{bottom:14px;right:16px;text-align:right}
 .hud-tl b,.hud-br b{color:var(--bronze-deep);font-weight:400}
 .hud .live{color:var(--cyan)}
-.hud .live::before{
-  content:'●';margin-right:6px;animation:pulseDot 1.6s infinite;
-}
+.hud .live::before{content:'●';margin-right:6px;animation:pulseDot 2.4s var(--ease-soft) infinite}
 @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.25}}
 
-/* Scenes with cinematic mask/fade */
+/* ========== TRANSITIONS DE SCÈNES — opacity + visibility ========== */
 .svg-scene{
   position:absolute;inset:0;
-  opacity:0;transform:translateY(26px) scale(.985);
-  transition:opacity .9s var(--ease-out),transform .9s var(--ease-out);
+  opacity:0;visibility:hidden;
+  transform:translateY(26px) scale(.985) translateZ(0);
+  transition:opacity .8s var(--ease-out),
+             transform .8s var(--ease-out),
+             visibility 0s linear .8s;
   display:flex;align-items:center;justify-content:center;
   pointer-events:none;
 }
-.svg-scene.active{opacity:1;transform:translateY(0) scale(1);z-index:10;pointer-events:auto}
+.svg-scene.active{
+  opacity:1;visibility:visible;
+  transform:translateY(0) scale(1) translateZ(0);
+  transition:opacity .8s var(--ease-out),
+             transform .8s var(--ease-out),
+             visibility 0s;
+  z-index:10;pointer-events:auto;
+}
 .svg-scene svg{width:100%;height:100%}
 
-/* Crosshair cursor inside visual zone */
+/* Crosshair */
 .stage.hovering{cursor:none}
-.crosshair{position:absolute;z-index:60;pointer-events:none;opacity:0;transition:opacity .3s}
+.crosshair{position:absolute;z-index:60;pointer-events:none;opacity:0;transition:opacity .3s;will-change:transform}
 .stage.hovering .crosshair{opacity:1}
 .crosshair .ch-line{position:absolute;background:rgba(212,175,55,.55)}
 .crosshair .h{width:100vw;height:1px;left:-50vw;top:0}
 .crosshair .v{height:100vh;width:1px;top:-50vh;left:0}
-.crosshair .ch-dot{
-  position:absolute;width:5px;height:5px;border:1px solid var(--bronze);
-  transform:translate(-50%,-50%) rotate(45deg);left:0;top:0;
-}
-.crosshair .ch-coord{
-  position:absolute;left:14px;top:10px;white-space:nowrap;
-  font-family:var(--mono);font-size:.52rem;letter-spacing:1px;color:var(--bronze-deep);
-}
+.crosshair .ch-dot{position:absolute;width:5px;height:5px;border:1px solid var(--bronze);transform:translate(-50%,-50%) rotate(45deg);left:0;top:0}
+.crosshair .ch-coord{position:absolute;left:14px;top:10px;white-space:nowrap;font-family:var(--mono);font-size:.52rem;letter-spacing:1px;color:var(--bronze-deep)}
 
 /* ==========================================================
-   SVG SCENE STYLES & ANIMATIONS
+   SVG SCENE STYLES & KEYFRAMES — cycles lents 6s–8s, ease-in-out
    ========================================================== */
 .dim-line{stroke:var(--bronze-deep);stroke-width:.8;fill:none}
 .dim-tick{stroke:var(--bronze-deep);stroke-width:.8}
@@ -280,41 +256,69 @@ header::after{
 .tech-text{font-family:var(--mono);font-size:7px;fill:#5b626f;letter-spacing:1.2px}
 .mono-sm{font-family:var(--mono);font-size:6.5px;fill:#4a505c;letter-spacing:1px}
 
-/* Scene 1 — materialization */
-@keyframes blockDrop{0%{transform:translateY(-70px);opacity:0}35%{transform:translateY(0);opacity:1}80%{transform:translateY(0);opacity:1}100%{transform:translateY(0);opacity:1}}
-@keyframes gantry{0%,100%{transform:translate(0,-46px)}30%{transform:translate(0,0)}45%{transform:translate(0,-10px)}}
-@keyframes ghostBlink{0%,100%{opacity:.35}50%{opacity:.85}}
-.anim-block1{animation:blockDrop 5s var(--ease-out) infinite}
-.anim-gantry{animation:gantry 5s var(--ease-out) infinite}
-.anim-ghost{animation:ghostBlink 2.4s infinite}
+/* Scene 1 — materialization (cycle 7s, amplitude contenue) */
+@keyframes blockDrop{
+  0%{transform:translateY(-60px);opacity:0}
+  30%{transform:translateY(0);opacity:1}
+  85%{transform:translateY(0);opacity:1}
+  100%{transform:translateY(0);opacity:1}
+}
+@keyframes gantry{
+  0%,100%{transform:translateY(-34px)}
+  30%{transform:translateY(0)}
+  45%{transform:translateY(-8px)}
+}
+@keyframes ghostBlink{0%,100%{opacity:.35}50%{opacity:.8}}
+.anim-block1{animation:blockDrop 7s var(--ease-soft) infinite}
+.anim-gantry{animation:gantry 7s var(--ease-soft) infinite}
+.anim-ghost{animation:ghostBlink 3.6s ease-in-out infinite}
 
-/* Scene 2 — LiDAR scan */
-@keyframes scanSweep{0%{transform:translateY(-30px);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(190px);opacity:0}}
-@keyframes lidarDot{0%,30%{opacity:0}45%,85%{opacity:.95}100%{opacity:.15}}
-.anim-scanline{animation:scanSweep 4.5s linear infinite}
+/* Scene 2 — LiDAR (balayage 7s lent et continu) */
+@keyframes scanSweep{
+  0%{transform:translateY(-24px);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translateY(150px);opacity:0}
+}
+@keyframes lidarDot{
+  0%,32%{opacity:0}
+  46%,84%{opacity:.95}
+  100%{opacity:.15}
+}
+.anim-scanline{animation:scanSweep 7s ease-in-out infinite}
 .lidar-dot{opacity:0}
-.anim-scanline .lidar-dot, .lidar-group.lit .lidar-dot{animation:lidarDot 4.5s linear infinite}
-.scan-plane{animation:scanSweep 4.5s linear infinite}
+.anim-scanline .lidar-dot,.lidar-group.lit .lidar-dot{animation:lidarDot 7s ease-in-out infinite}
+.scan-plane{animation:scanSweep 7s ease-in-out infinite}
 
-/* Scene 3 — CAD matrix & IA */
+/* Scene 3 — CAD matrix */
 @keyframes dashFlow{to{stroke-dashoffset:-40}}
-@keyframes screenBuild{0%,15%{opacity:0}35%,100%{opacity:1}}
+@keyframes screenBuild{
+  0%,15%{opacity:0;transform:translateZ(0) scale(.97)}
+  40%{opacity:1;transform:translateZ(0) scale(1)}
+  100%{opacity:1;transform:translateZ(0) scale(1)}
+}
 @keyframes metaScroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
 @keyframes cpuPulse{0%,100%{opacity:.35}50%{opacity:1}}
-.flow-line{stroke-dasharray:6 6;animation:dashFlow 1.2s linear infinite}
-.anim-build{animation:screenBuild 6s var(--ease-out) infinite}
-.anim-cpu{animation:cpuPulse 2s infinite}
-.meta-col{animation:metaScroll 14s linear infinite}
+.flow-line{stroke-dasharray:6 6;animation:dashFlow 2.4s linear infinite}
+.anim-build{animation:screenBuild 8s var(--ease-soft) infinite}
+.anim-cpu{animation:cpuPulse 3s ease-in-out infinite}
+.meta-col{animation:metaScroll 18s linear infinite}
 
-/* Scene 4 — villa */
-@keyframes waterShimmer{0%,100%{fill:#0e7490}50%{fill:#0891b2}}
-@keyframes reflectSlide{0%,100%{transform:translateX(0);opacity:.5}50%{transform:translateX(14px);opacity:.85}}
-@keyframes houseSettle{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+/* Scene 4 — villa (cycles 6s–8s, micro-amplitudes) */
+@keyframes waterShimmer{0%,100%{fill:#0e7490}50%{fill:#1289a8}}
+@keyframes reflectSlide{
+  0%,100%{transform:translateX(0) translateZ(0);opacity:.5}
+  50%{transform:translateX(8px) translateZ(0);opacity:.85}
+}
+@keyframes houseSettle{
+  0%,100%{transform:translateY(0) translateZ(0)}
+  50%{transform:translateY(-4px) translateZ(0)}
+}
 @keyframes groundLight{0%,70%,100%{opacity:.25}80%,90%{opacity:1}}
-.anim-water{animation:waterShimmer 4s ease-in-out infinite}
-.anim-reflect{animation:reflectSlide 5s ease-in-out infinite}
+.anim-water{animation:waterShimmer 6s ease-in-out infinite}
+.anim-reflect{animation:reflectSlide 7s ease-in-out infinite}
 .anim-house4{animation:houseSettle 8s ease-in-out infinite}
-.anim-glight{animation:groundLight 6s infinite}
+.anim-glight{animation:groundLight 7.2s ease-in-out infinite}
 
 /* ============ FOOTER ============ */
 footer{
@@ -385,7 +389,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
 <!-- ================= SCROLLYTELLING ================= -->
 <div class="story-wrap">
 
-  <!-- Technical cut line + progress -->
   <div class="cut-line">
     <span class="cut-label">LIGNE DE COUPE A—A'</span>
     <div class="progress-fill" id="progFill"></div>
@@ -458,7 +461,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
       <div class="hud hud-tl" id="hudTL"><b>VIEW_01</b> // ASSEMBLAGE · <span class="live">TRACKING</span></div>
       <div class="hud hud-br" id="hudBR">COORD: 45.7589, 4.8352<br><b>STATUS:</b> OK</div>
 
-      <!-- Crosshair -->
       <div class="crosshair" id="crosshair">
         <div class="ch-line h"></div>
         <div class="ch-line v"></div>
@@ -484,32 +486,27 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             </pattern>
           </defs>
 
-          <!-- Ground grid reference -->
           <g stroke="rgba(160,165,177,.1)" stroke-width=".5">
             <line x1="40" y1="400" x2="480" y2="400"/><line x1="40" y1="410" x2="480" y2="410"/>
           </g>
 
-          <!-- Assembly plate -->
           <polygon points="260,330 430,245 260,160 90,245" fill="#17181c" stroke="#3e424b" stroke-width="1.2"/>
           <polygon points="90,245 260,330 260,342 90,257" fill="#101114"/>
           <polygon points="430,245 260,330 260,342 430,257" fill="#0c0d10"/>
           <polygon points="260,330 430,245 260,160 90,245" fill="url(#hatch)" opacity=".5"/>
 
-          <!-- Ghost target outline -->
           <g class="anim-ghost" stroke="rgba(212,175,55,.7)" stroke-width=".8" stroke-dasharray="4 4" fill="none">
             <polygon points="260,270 320,240 260,210 200,240"/>
             <polygon points="200,240 260,270 260,330 200,300"/>
             <polygon points="320,240 260,270 260,330 320,300"/>
           </g>
 
-          <!-- Block A : concrete (placed) -->
           <g>
             <polygon points="205,262 250,240 205,218 160,240" fill="url(#gConcrete)" stroke="#4a4f59" stroke-width=".8"/>
             <polygon points="160,240 205,262 205,308 160,286" fill="#1b1d22" stroke="#3e424b" stroke-width=".8"/>
             <polygon points="250,240 205,262 205,308 250,286" fill="#14161a" stroke="#31353d" stroke-width=".8"/>
             <text x="205" y="248" text-anchor="middle" class="mono-sm">B01-BÉTON</text>
           </g>
-          <!-- Block B : wood (placed) -->
           <g>
             <polygon points="290,278 322,262 290,246 258,262" fill="url(#gWood)" stroke="#6e5433" stroke-width=".8"/>
             <polygon points="258,262 290,278 290,312 258,296" fill="#4a3820" stroke="#3d2f1b" stroke-width=".8"/>
@@ -518,7 +515,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <line x1="274" y1="274" x2="274" y2="306" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
             <text x="290" y="266" text-anchor="middle" class="mono-sm">B02-CHÊNE</text>
           </g>
-          <!-- Block C : glass (dropped by gantry) -->
           <g class="anim-block1">
             <polygon points="262,182 296,165 262,148 228,165" fill="url(#gGlassB)" stroke="#00b4d8" stroke-width=".9" opacity=".95"/>
             <polygon points="228,165 262,182 262,222 228,205" fill="rgba(0,140,180,.22)" stroke="#007a94" stroke-width=".8"/>
@@ -526,14 +522,12 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <line x1="236" y1="160" x2="254" y2="172" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
           </g>
 
-          <!-- Gantry crane -->
           <g class="anim-gantry">
             <rect x="88" y="30" width="5" height="215" fill="#2c2f36"/>
             <rect x="427" y="30" width="5" height="215" fill="#2c2f36"/>
             <rect x="80" y="26" width="360" height="8" fill="#22252a" stroke="#3e424b" stroke-width=".8"/>
             <rect x="252" y="34" width="16" height="12" fill="#3e424b"/>
             <line x1="260" y1="46" x2="260" y2="96" stroke="#a0a5b1" stroke-width="1"/>
-            <!-- Gripper -->
             <path d="M246 96 L274 96 L270 108 L250 108 Z" fill="#c09a58" opacity=".9"/>
             <line x1="250" y1="108" x2="250" y2="116" stroke="#c09a58" stroke-width="2"/>
             <line x1="270" y1="108" x2="270" y2="116" stroke="#c09a58" stroke-width="2"/>
@@ -541,7 +535,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <text x="260" y="123" text-anchor="middle" class="mono-sm" fill="#00b4d8">MAGNET</text>
           </g>
 
-          <!-- Dimension callouts -->
           <g>
             <line x1="90" y1="245" x2="60" y2="230" class="dim-line"/>
             <line x1="430" y1="245" x2="460" y2="230" class="dim-line"/>
@@ -558,7 +551,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <line x1="486" y1="330" x2="494" y2="330" class="dim-tick"/>
             <text x="500" y="276" class="dim-text" transform="rotate(90 500 276)" text-anchor="middle">H 600</text>
           </g>
-          <!-- Vertical dim on blocks -->
           <g>
             <line x1="205" y1="218" x2="130" y2="180" class="dim-line"/>
             <line x1="205" y1="308" x2="130" y2="270" class="dim-line"/>
@@ -567,7 +559,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <line x1="126" y1="270" x2="134" y2="270" class="dim-tick"/>
             <text x="118" y="228" text-anchor="end" class="dim-text" transform="rotate(-90 118 228)">H. 300</text>
           </g>
-          <!-- Crosshair registration marks -->
           <g stroke="rgba(212,175,55,.5)" stroke-width=".7">
             <line x1="260" y1="150" x2="260" y2="162"/><line x1="254" y1="156" x2="266" y2="156"/>
             <line x1="90" y1="239" x2="90" y2="251"/><line x1="84" y1="245" x2="96" y2="245"/>
@@ -588,16 +579,13 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             </radialGradient>
           </defs>
 
-          <!-- Scanner pillars -->
           <rect x="96" y="60" width="7" height="300" fill="#22252a" stroke="#3e424b" stroke-width=".8"/>
           <rect x="417" y="60" width="7" height="300" fill="#22252a" stroke="#3e424b" stroke-width=".8"/>
           <rect x="90" y="54" width="340" height="8" fill="#181a1e" stroke="#2c2f36"/>
           <text x="100" y="48" class="tech-text">SCANNER-AXIS // TWIN-LASER 635NM</text>
 
-          <!-- Platform + structure (point cloud style) -->
           <polygon points="260,330 420,250 260,170 100,250" fill="rgba(18,19,24,.6)" stroke="rgba(0,180,216,.4)" stroke-width="1"/>
 
-          <!-- Structure edges as wireframe -->
           <g stroke="rgba(0,180,216,.55)" stroke-width=".9" fill="rgba(41,82,112,.14)">
             <polygon points="205,262 250,240 205,218 160,240"/>
             <polygon points="160,240 205,262 205,308 160,286"/>
@@ -610,32 +598,29 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <polygon points="296,165 262,182 262,222 296,205"/>
           </g>
 
-          <!-- LiDAR point cloud -->
           <g fill="#67e8f9">
-            <!-- generated pattern of dots on faces -->
-            <circle class="lidar-dot" cx="170" cy="238" r="1.3"/><circle class="lidar-dot" cx="185" cy="245" r="1.3" style="animation-delay:.15s"/>
-            <circle class="lidar-dot" cx="200" cy="252" r="1.3" style="animation-delay:.3s"/><circle class="lidar-dot" cx="215" cy="246" r="1.3" style="animation-delay:.45s"/>
-            <circle class="lidar-dot" cx="230" cy="238" r="1.3" style="animation-delay:.6s"/><circle class="lidar-dot" cx="196" cy="232" r="1.3" style="animation-delay:.2s"/>
-            <circle class="lidar-dot" cx="183" cy="225" r="1.3" style="animation-delay:.35s"/><circle class="lidar-dot" cx="210" cy="226" r="1.3" style="animation-delay:.5s"/>
-            <circle class="lidar-dot" cx="240" cy="228" r="1.3" style="animation-delay:.65s"/><circle class="lidar-dot" cx="255" cy="236" r="1.3" style="animation-delay:.8s"/>
-            <circle class="lidar-dot" cx="166" cy="252" r="1.3" style="animation-delay:.25s"/><circle class="lidar-dot" cx="180" cy="266" r="1.3" style="animation-delay:.4s"/>
-            <circle class="lidar-dot" cx="196" cy="274" r="1.3" style="animation-delay:.55s"/><circle class="lidar-dot" cx="212" cy="282" r="1.3" style="animation-delay:.7s"/>
-            <circle class="lidar-dot" cx="248" cy="252" r="1.3" style="animation-delay:.85s"/><circle class="lidar-dot" cx="248" cy="270" r="1.3" style="animation-delay:1s"/>
-            <circle class="lidar-dot" cx="248" cy="288" r="1.3" style="animation-delay:1.15s"/><circle class="lidar-dot" cx="268" cy="256" r="1.3" style="animation-delay:.3s"/>
-            <circle class="lidar-dot" cx="282" cy="264" r="1.3" style="animation-delay:.45s"/><circle class="lidar-dot" cx="298" cy="272" r="1.3" style="animation-delay:.6s"/>
-            <circle class="lidar-dot" cx="312" cy="266" r="1.3" style="animation-delay:.75s"/><circle class="lidar-dot" cx="290" cy="252" r="1.3" style="animation-delay:.9s"/>
-            <circle class="lidar-dot" cx="276" cy="246" r="1.3" style="animation-delay:1.05s"/><circle class="lidar-dot" cx="264" cy="256" r="1.3" style="animation-delay:1.2s"/>
-            <circle class="lidar-dot" cx="264" cy="272" r="1.3" style="animation-delay:1.35s"/><circle class="lidar-dot" cx="264" cy="288" r="1.3" style="animation-delay:1.5s"/>
-            <circle class="lidar-dot" cx="312" cy="284" r="1.3" style="animation-delay:1.05s"/><circle class="lidar-dot" cx="312" cy="300" r="1.3" style="animation-delay:1.2s"/>
-            <circle class="lidar-dot" cx="234" cy="172" r="1.3" style="animation-delay:.4s"/><circle class="lidar-dot" cx="248" cy="178" r="1.3" style="animation-delay:.55s"/>
-            <circle class="lidar-dot" cx="262" cy="186" r="1.3" style="animation-delay:.7s"/><circle class="lidar-dot" cx="278" cy="178" r="1.3" style="animation-delay:.85s"/>
-            <circle class="lidar-dot" cx="292" cy="170" r="1.3" style="animation-delay:1s"/><circle class="lidar-dot" cx="252" cy="164" r="1.3" style="animation-delay:.5s"/>
-            <circle class="lidar-dot" cx="268" cy="158" r="1.3" style="animation-delay:.65s"/><circle class="lidar-dot" cx="236" cy="192" r="1.3" style="animation-delay:.8s"/>
-            <circle class="lidar-dot" cx="236" cy="204" r="1.3" style="animation-delay:.95s"/><circle class="lidar-dot" cx="286" cy="192" r="1.3" style="animation-delay:1.1s"/>
-            <circle class="lidar-dot" cx="286" cy="206" r="1.3" style="animation-delay:1.25s"/><circle class="lidar-dot" cx="258" cy="196" r="1.3" style="animation-delay:1s"/>
+            <circle class="lidar-dot" cx="170" cy="238" r="1.3"/><circle class="lidar-dot" cx="185" cy="245" r="1.3" style="animation-delay:.2s"/>
+            <circle class="lidar-dot" cx="200" cy="252" r="1.3" style="animation-delay:.4s"/><circle class="lidar-dot" cx="215" cy="246" r="1.3" style="animation-delay:.6s"/>
+            <circle class="lidar-dot" cx="230" cy="238" r="1.3" style="animation-delay:.8s"/><circle class="lidar-dot" cx="196" cy="232" r="1.3" style="animation-delay:.3s"/>
+            <circle class="lidar-dot" cx="183" cy="225" r="1.3" style="animation-delay:.5s"/><circle class="lidar-dot" cx="210" cy="226" r="1.3" style="animation-delay:.7s"/>
+            <circle class="lidar-dot" cx="240" cy="228" r="1.3" style="animation-delay:.9s"/><circle class="lidar-dot" cx="255" cy="236" r="1.3" style="animation-delay:1.1s"/>
+            <circle class="lidar-dot" cx="166" cy="252" r="1.3" style="animation-delay:.35s"/><circle class="lidar-dot" cx="180" cy="266" r="1.3" style="animation-delay:.55s"/>
+            <circle class="lidar-dot" cx="196" cy="274" r="1.3" style="animation-delay:.75s"/><circle class="lidar-dot" cx="212" cy="282" r="1.3" style="animation-delay:.95s"/>
+            <circle class="lidar-dot" cx="248" cy="252" r="1.3" style="animation-delay:1.15s"/><circle class="lidar-dot" cx="248" cy="270" r="1.3" style="animation-delay:1.35s"/>
+            <circle class="lidar-dot" cx="248" cy="288" r="1.3" style="animation-delay:1.55s"/><circle class="lidar-dot" cx="268" cy="256" r="1.3" style="animation-delay:.4s"/>
+            <circle class="lidar-dot" cx="282" cy="264" r="1.3" style="animation-delay:.6s"/><circle class="lidar-dot" cx="298" cy="272" r="1.3" style="animation-delay:.8s"/>
+            <circle class="lidar-dot" cx="312" cy="266" r="1.3" style="animation-delay:1s"/><circle class="lidar-dot" cx="290" cy="252" r="1.3" style="animation-delay:1.2s"/>
+            <circle class="lidar-dot" cx="276" cy="246" r="1.3" style="animation-delay:1.4s"/><circle class="lidar-dot" cx="264" cy="256" r="1.3" style="animation-delay:1.6s"/>
+            <circle class="lidar-dot" cx="264" cy="272" r="1.3" style="animation-delay:1.8s"/><circle class="lidar-dot" cx="264" cy="288" r="1.3" style="animation-delay:2s"/>
+            <circle class="lidar-dot" cx="312" cy="284" r="1.3" style="animation-delay:1.3s"/><circle class="lidar-dot" cx="312" cy="300" r="1.3" style="animation-delay:1.5s"/>
+            <circle class="lidar-dot" cx="234" cy="172" r="1.3" style="animation-delay:.5s"/><circle class="lidar-dot" cx="248" cy="178" r="1.3" style="animation-delay:.7s"/>
+            <circle class="lidar-dot" cx="262" cy="186" r="1.3" style="animation-delay:.9s"/><circle class="lidar-dot" cx="278" cy="178" r="1.3" style="animation-delay:1.1s"/>
+            <circle class="lidar-dot" cx="292" cy="170" r="1.3" style="animation-delay:1.3s"/><circle class="lidar-dot" cx="252" cy="164" r="1.3" style="animation-delay:.6s"/>
+            <circle class="lidar-dot" cx="268" cy="158" r="1.3" style="animation-delay:.8s"/><circle class="lidar-dot" cx="236" cy="192" r="1.3" style="animation-delay:1s"/>
+            <circle class="lidar-dot" cx="236" cy="204" r="1.3" style="animation-delay:1.2s"/><circle class="lidar-dot" cx="286" cy="192" r="1.3" style="animation-delay:1.4s"/>
+            <circle class="lidar-dot" cx="286" cy="206" r="1.3" style="animation-delay:1.6s"/><circle class="lidar-dot" cx="258" cy="196" r="1.3" style="animation-delay:1.3s"/>
           </g>
 
-          <!-- Twin laser beams (vertical sweep) -->
           <g class="anim-scanline">
             <polygon points="110,150 420,150 420,156 110,156" fill="rgba(0,180,216,.12)"/>
             <line x1="110" y1="153" x2="420" y2="153" stroke="#00b4d8" stroke-width="1.6"/>
@@ -643,10 +628,8 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <ellipse cx="420" cy="153" rx="7" ry="12" fill="url(#gLaser)"/>
           </g>
 
-          <!-- Scan metadata -->
           <text x="110" y="388" class="tech-text">PASS 07/16 — RÉSOLUTION 0.1MM</text>
           <text x="110" y="400" class="mono-sm" fill="#00b4d8">PTS: <tspan id="ptCount">2 412 884</tspan> · ΔZ ±0.03</text>
-          <!-- vertical gauge -->
           <g>
             <line x1="448" y1="80" x2="448" y2="360" stroke="var(--line-tech)"/>
             <rect x="444" y="80" width="8" height="280" fill="none" stroke="#3e424b" stroke-width=".8"/>
@@ -660,16 +643,13 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
       <!-- ========== SCENE 3 : CAD MATRIX / IA ========== -->
       <div class="svg-scene" id="vis3">
         <svg viewBox="0 0 520 460">
-          <!-- Data inflow -->
           <path d="M 40 60 Q 160 60 210 140" fill="none" stroke="#00b4d8" stroke-width="1.4" class="flow-line" opacity=".8"/>
-          <path d="M 60 40 Q 180 40 225 130" fill="none" stroke="#295270" stroke-width="1.2" class="flow-line" style="animation-delay:.4s"/>
+          <path d="M 60 40 Q 180 40 225 130" fill="none" stroke="#295270" stroke-width="1.2" class="flow-line" style="animation-delay:.8s"/>
           <text x="30" y="30" class="tech-text">IN: CLOUD-POINT.STL</text>
 
-          <!-- CAD viewport frame -->
           <rect x="150" y="90" width="240" height="240" fill="rgba(41,82,112,.06)" stroke="#3e424b" stroke-width="1"/>
           <line x1="150" y1="210" x2="390" y2="210" stroke="rgba(160,165,177,.15)" stroke-dasharray="2 4"/>
           <line x1="270" y1="90" x2="270" y2="330" stroke="rgba(160,165,177,.15)" stroke-dasharray="2 4"/>
-          <!-- viewport ticks -->
           <g stroke="#3e424b" stroke-width=".7">
             <line x1="200" y1="90" x2="200" y2="96"/><line x1="340" y1="90" x2="340" y2="96"/>
             <line x1="200" y1="330" x2="200" y2="324"/><line x1="340" y1="330" x2="340" y2="324"/>
@@ -677,7 +657,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
           <text x="150" y="82" class="tech-text">VIEWPORT — ISO 30° · ORTHO</text>
           <text x="368" y="345" class="mono-sm">Ø OK</text>
 
-          <!-- Wireframe build -->
           <g class="anim-build">
             <g stroke="#5aa7d1" stroke-width="1" fill="rgba(41,82,112,.18)">
               <polygon points="270,290 340,255 270,220 200,255"/>
@@ -687,7 +666,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
               <polygon points="236,160 272,178 272,220 236,202"/>
               <polygon points="308,160 272,178 272,220 308,202"/>
             </g>
-            <!-- Constraint lines -->
             <g stroke="rgba(212,175,55,.65)" stroke-width=".7" stroke-dasharray="5 3" fill="none">
               <line x1="270" y1="290" x2="270" y2="120"/>
               <line x1="200" y1="255" x2="140" y2="225"/>
@@ -702,7 +680,6 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
             <text x="404" y="220" class="dim-text">FIX</text>
           </g>
 
-          <!-- CPU / IA node -->
           <g transform="translate(60,300)">
             <rect x="0" y="0" width="64" height="64" fill="#121318" stroke="#3e424b" stroke-width="1"/>
             <rect x="8" y="8" width="48" height="48" fill="none" stroke="#295270" stroke-width=".8"/>
@@ -712,11 +689,9 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
               <line x1="20" y1="32" x2="8" y2="32"/><line x1="44" y1="32" x2="56" y2="32"/>
             </g>
             <text x="32" y="80" text-anchor="middle" class="tech-text" fill="#00b4d8">CORE_IA</text>
-            <!-- link to viewport -->
             <line x1="64" y1="32" x2="150" y2="200" stroke="rgba(0,180,216,.4)" stroke-width="1" class="flow-line"/>
           </g>
 
-          <!-- Scrolling metadata column -->
           <g transform="translate(410,90)">
             <rect x="-6" y="-14" width="104" height="268" fill="rgba(13,14,17,.7)" stroke="var(--line-tech)" stroke-width=".8"/>
             <clipPath id="metaClip"><rect x="-2" y="-6" width="96" height="250"/></clipPath>
@@ -766,15 +741,12 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
           </defs>
 
           <g class="anim-house4">
-            <!-- Sky glow backdrop -->
             <rect x="60" y="30" width="440" height="180" fill="url(#gSky)"/>
 
-            <!-- Terrain / lawn -->
             <polygon points="280,350 470,255 280,160 90,255" fill="#16351f" stroke="#1f4a2c" stroke-width="1"/>
             <polygon points="90,255 280,350 280,364 90,269" fill="#0e2416"/>
             <polygon points="470,255 280,350 280,364 470,269" fill="#0a1c11"/>
 
-            <!-- Stone paving path -->
             <g>
               <polygon points="150,268 210,238 232,249 172,279" fill="#3e424b" stroke="#2c2f36" stroke-width=".8"/>
               <polygon points="172,279 232,249 232,257 172,287" fill="#2c2f36"/>
@@ -782,74 +754,55 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
               <line x1="182" y1="270" x2="226" y2="249" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
             </g>
 
-            <!-- INFINITY POOL -->
             <g>
               <polygon points="352,318 448,270 380,236 284,284" fill="#082f3a"/>
               <polygon points="350,314 444,268 378,236 286,282" fill="url(#gPool)" class="anim-water"/>
-              <!-- caustics -->
               <g class="anim-reflect" stroke="rgba(255,255,255,.35)" stroke-width="1" fill="none">
                 <path d="M 310 282 Q 340 296 372 282"/>
                 <path d="M 330 294 Q 362 308 396 292"/>
               </g>
-              <!-- overflow edge highlight -->
               <line x1="286" y1="282" x2="444" y2="268" stroke="rgba(180,240,255,.7)" stroke-width="1.4"/>
               <text x="360" y="298" text-anchor="middle" class="mono-sm" fill="rgba(220,250,255,.7)">POOL ∞</text>
             </g>
 
-            <!-- VILLA — cantilever volume -->
             <g>
-              <!-- shadow on lawn -->
               <polygon points="160,258 290,322 396,272 300,222" fill="rgba(0,0,0,.38)"/>
 
-              <!-- Ground floor : stone façade -->
               <polygon points="160,222 280,282 280,222 160,162" fill="url(#gFacade)" stroke="#8a867e" stroke-width=".8"/>
               <polygon points="280,282 376,234 376,174 280,222" fill="#c2beb6" stroke="#9a968e" stroke-width=".8"/>
-              <!-- stone joint lines -->
               <g stroke="rgba(0,0,0,.15)" stroke-width=".7">
                 <line x1="176" y1="186" x2="176" y2="246"/><line x1="196" y1="196" x2="196" y2="256"/>
                 <line x1="216" y1="206" x2="216" y2="266"/><line x1="236" y1="216" x2="236" y2="276"/>
                 <line x1="256" y1="226" x2="256" y2="286"/><line x1="268" y1="174" x2="168" y2="124"/>
               </g>
 
-              <!-- Ground roof slab (supports cantilever) -->
               <polygon points="280,222 376,174 240,106 144,154" fill="#2c2f36" stroke="#3e424b" stroke-width="1"/>
               <polygon points="144,154 280,222 280,214 144,146" fill="#22252a"/>
 
-              <!-- UPPER FLOOR — cantilevered wood volume -->
               <g transform="translate(40,-30)">
-                <!-- shadow face (left/underside) -->
                 <polygon points="120,230 240,290 240,250 120,190" fill="#33261a"/>
-                <!-- wood cladding face -->
                 <polygon points="240,290 336,242 336,202 240,250" fill="url(#gWoodClad)" stroke="#5c4527" stroke-width=".8"/>
-                <!-- vertical battens -->
                 <g stroke="rgba(0,0,0,.3)" stroke-width="1.1">
                   <line x1="256" y1="282" x2="256" y2="244"/><line x1="272" y1="274" x2="272" y2="236"/>
                   <line x1="288" y1="266" x2="288" y2="228"/><line x1="304" y1="258" x2="304" y2="220"/>
                   <line x1="320" y1="250" x2="320" y2="212"/>
                 </g>
-                <!-- glazing band with interior visible -->
                 <polygon points="120,190 240,250 240,206 120,146" fill="url(#gGlass4)" stroke="#7fa8c9" stroke-width="1"/>
-                <!-- interior warm glow -->
                 <polygon points="132,182 228,230 228,200 132,152" fill="rgba(255,196,110,.35)"/>
                 <g stroke="rgba(255,255,255,.45)" stroke-width="1">
                   <line x1="150" y1="158" x2="150" y2="196"/><line x1="180" y1="172" x2="180" y2="212"/>
                   <line x1="210" y1="186" x2="210" y2="228"/>
                 </g>
-                <!-- glass reflection streak -->
                 <polygon class="anim-reflect" points="140,176 168,190 168,160 140,146" fill="rgba(255,255,255,.28)"/>
-                <!-- roof slab -->
                 <polygon points="120,146 240,206 336,158 216,98" fill="#1a1c20" stroke="#2c2f36" stroke-width="1"/>
-                <!-- cantilever dimension -->
                 <line x1="216" y1="98" x2="120" y2="60" class="dim-line" stroke-dasharray="3 3"/>
                 <text x="150" y="52" class="dim-text">PORTE-À-FAUX 4.2 M</text>
               </g>
 
-              <!-- Door -->
               <polygon points="180,238 204,250 204,204 180,192" fill="#2c2418" stroke="#1a1510" stroke-width=".8"/>
               <line x1="192" y1="196" x2="192" y2="244" stroke="rgba(212,175,55,.6)" stroke-width="1"/>
             </g>
 
-            <!-- Landscape : minimalist trees -->
             <g>
               <polygon points="128,246 140,238 128,206 116,238" fill="#1d5c33"/>
               <polygon points="140,238 128,246 128,254 140,246" fill="#14421f"/>
@@ -857,27 +810,24 @@ footer .f-right{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;co
               <polygon points="420,252 432,244 420,212 408,244" fill="#1d5c33"/>
               <polygon points="432,244 420,252 420,260 432,252" fill="#14421f"/>
               <rect x="418" y="258" width="4" height="10" fill="#3a2c18"/>
-              <!-- shrubs -->
               <ellipse cx="330" cy="330" rx="14" ry="7" fill="#1a4a2a"/>
               <ellipse cx="120" cy="282" rx="11" ry="6" fill="#1a4a2a"/>
             </g>
 
-            <!-- Architectural ground lighting -->
             <g fill="#ffd98a">
               <circle class="anim-glight" cx="238" cy="296" r="2.4"/>
-              <circle class="anim-glight" cx="286" cy="320" r="2.4" style="animation-delay:1.2s"/>
-              <circle class="anim-glight" cx="188" cy="272" r="2.4" style="animation-delay:2.4s"/>
-              <circle class="anim-glight" cx="400" cy="300" r="2.4" style="animation-delay:.6s"/>
+              <circle class="anim-glight" cx="286" cy="320" r="2.4" style="animation-delay:1.4s"/>
+              <circle class="anim-glight" cx="188" cy="272" r="2.4" style="animation-delay:2.8s"/>
+              <circle class="anim-glight" cx="400" cy="300" r="2.4" style="animation-delay:.7s"/>
             </g>
             <g fill="rgba(255,217,138,.14)">
               <circle class="anim-glight" cx="238" cy="296" r="7"/>
-              <circle class="anim-glight" cx="286" cy="320" r="7" style="animation-delay:1.2s"/>
-              <circle class="anim-glight" cx="188" cy="272" r="7" style="animation-delay:2.4s"/>
-              <circle class="anim-glight" cx="400" cy="300" r="7" style="animation-delay:.6s"/>
+              <circle class="anim-glight" cx="286" cy="320" r="7" style="animation-delay:1.4s"/>
+              <circle class="anim-glight" cx="188" cy="272" r="7" style="animation-delay:2.8s"/>
+              <circle class="anim-glight" cx="400" cy="300" r="7" style="animation-delay:.7s"/>
             </g>
           </g>
 
-          <!-- Title block -->
           <g>
             <rect x="60" y="404" width="280" height="52" fill="rgba(13,14,17,.85)" stroke="var(--line-tech)" stroke-width=".8"/>
             <line x1="60" y1="421" x2="340" y2="421" stroke="var(--line-tech)"/>
@@ -943,24 +893,33 @@ document.addEventListener('DOMContentLoaded', () => {
   nodes[0].classList.add('lit');
   progFill.style.height = '25%';
 
-  /* ---- Crosshair cursor ---- */
+  /* Crosshair — positionnement via transform uniquement (GPU) */
+  let chX = 0, chY = 0, tX = 0, tY = 0, chRaf = null;
+  function chLoop(){
+    chX += (tX - chX) * 0.22;
+    chY += (tY - chY) * 0.22;
+    cross.style.transform = `translate3d(${chX}px, ${chY}px, 0)`;
+    if (Math.abs(tX - chX) > .1 || Math.abs(tY - chY) > .1) {
+      chRaf = requestAnimationFrame(chLoop);
+    } else { chRaf = null; }
+  }
   stage.addEventListener('pointerenter', () => stage.classList.add('hovering'));
   stage.addEventListener('pointerleave', () => stage.classList.remove('hovering'));
   stage.addEventListener('pointermove', (e) => {
     const r = stage.getBoundingClientRect();
-    const x = e.clientX - r.left, y = e.clientY - r.top;
-    cross.style.transform = `translate(${x}px, ${y}px)`;
+    tX = e.clientX - r.left; tY = e.clientY - r.top;
     const pad = (v) => String(Math.round(v)).padStart(4, '0');
-    chCoord.textContent = `X ${pad(x)} · Y ${pad(y)}`;
+    chCoord.textContent = `X ${pad(tX)} · Y ${pad(tY)}`;
+    if (!chRaf) { chX = chX || tX; chY = chY || tY; chRaf = requestAnimationFrame(chLoop); }
   });
 
-  /* ---- Animated point counter (scene 2) ---- */
+  /* Compteur de points (scene 2) */
   let pts = 2412884;
   setInterval(() => {
     pts += Math.floor(Math.random() * 900 + 120);
     const el = document.getElementById('ptCount');
     if (el) el.textContent = pts.toLocaleString('fr-FR').replace(/,/g, ' ');
-  }, 600);
+  }, 900);
 });
 </script>
 </body>
